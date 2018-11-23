@@ -12,7 +12,7 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-export PROMPT='%(?|[%B%F{green}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f|(%B%F{magenta}%?%f%b%) [%B%F{green}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f)'
+export PROMPT='%(?|[%B%F{cyan}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f|(%B%F{magenta}%?%f%b%) [%B%F{cyan}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f)'
 export EDITOR=/usr/bin/vim
 
 alias ls='ls -G'
@@ -26,7 +26,6 @@ alias du="ncdu -rr -x"
 
 alias gitlog='git log --graph --oneline --decorate --all'
 
-source ~/.gitkey
 __git_files () { 
     _wanted files expl 'local files' _files 
 }
