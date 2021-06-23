@@ -1,39 +1,44 @@
-" Change Vim's default color scheme to apprentice which is
-" a dark, low contrast and slate color scheme that's undistracting
-" and suitable for coding as it reduces eye strain
-" (emerge app-vim/colorschemes).
+python3 import os
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" Change Vim's default color scheme
 colorscheme apprentice
 
 " This is extremely useful for indenation purposes
 " of several filetypes used in web development
 " as you can simply press gg=G for auto indentation
-filetype plugin indent on
-
-" This will show line numbers
-set number
-
-" We'll combine normal line numbers with relative
-" line numbers to make it easier to move between
-" multiple lines
-set relativenumber
+if has('autocmd')
+  filetype plugin indent on
+endif
 
 " This will enable Vim's syntax highlighting
-syntax on
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
 
-" This will enable Vim's spell checking feature
-" for the English language (emerge -av vim-spell-en)
-set spell spelllang=en
+set autoindent
+set backspace=indent,eol,start
+set complete-=i
+set smarttab
+
+set nrformats-=octal
+
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
+endif
+
+" Show line numbers and relative line numbers
+set number
+set relativenumber
 
 " We'll be using this option to modify files directly
 " inside NERDTree inside Vim, without having to exit Vim
 set modifiable
 
-" This will highlight the current line your cursor is at
+" Highlight cursor current line and column
 set cursorline
-
-" This will highlight the current column your cursor is at
-" and it'll make it much easier to determine your closing tags
-" (along with matchtagalways) when code is properly indented
 set cursorcolumn
 
 " This will enable the usage of your mouse inside Vim in
@@ -57,19 +62,127 @@ set incsearch
 " matched the search keyword
 set hlsearch
 
-" This will make tabs 2 spaces wide
-set tabstop=2
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
+
+" This will make tabs 4 spaces wide
+set tabstop=4
 
 " This is needed to tree tabs as multiple spaces
-set shiftwidth=2
+set shiftwidth=4
 
 " This option will enable you to enter a real Tab character
 " by pressing Ctrl-V<Tab>
 set expandtab
 
+" Always display the status line
+set laststatus=2
+
+" Hide mode; this is shown in airline already
+set noshowmode
+
+" Show a menu of autocomplete commands on <Tab> in command line
+set wildmenu
+
+" Adjust view when scrolling to show more context
+if !&scrolloff
+  set scrolloff=1
+endif
+if !&sidescrolloff
+  set sidescrolloff=5
+endif
+set display+=lastline
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
+
+if &listchars ==# 'eol:$'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+endif
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
+
+if has('path_extra')
+  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+endif
+
+" If a file is modified outside of VIM, read in changes automatically
+set autoread
+
+if &history < 1000
+  set history=1000
+endif
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+if !empty(&viminfo)
+  set viminfo^=!
+endif
+set sessionoptions-=options
+set viewoptions-=options
+
+" Allow color schemes to do bright colors without forcing bold.
+if &t_Co == 8 && $TERM !~# '^Eterm'
+  set t_Co=16
+endif
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+if empty(mapcheck('<C-U>', 'i'))
+  inoremap <C-U> <C-G>u<C-U>
+endif
+if empty(mapcheck('<C-W>', 'i'))
+  inoremap <C-W> <C-G>u<C-W>
+endif
+
+" dynamically rename tmux window to show current file
+if exists('$TMUX')
+  autocmd BufReadPost,FileReadPost,BufNewFile * call system("tmux rename-window " . expand("%:t"))
+  autocmd VimLeave * call system("tmux setw automatic-rename")
+endif
+
+""" The below are settings for various plugins
+
 " This will enable NERDTree to show hidden files
 let NERDTreeShowHidden=1
 
-execute pathogen#infect()
-set laststatus=2
-set noshowmode
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+
+" Enable folding with the spacebar
+nnoremap <space> za
+
+" force enable powerline fonts
+let g:airline_powerline_fonts = 1
+
+" syntastic settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" UltiSnips settings
+"let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsExpandTrigger = "<nop>"
+inoremap <expr> <CR> pumvisible() ? "<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>" : "\<CR>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" ctrlp settings
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+" vim:set ft=vim et sw=2:
