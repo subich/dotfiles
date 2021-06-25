@@ -1,10 +1,6 @@
 # Dotfiles
 
-This is going to serve as a collection of my dotfiles and configuration files for UNIX-type programs.
-
-I'm honestly doing this more so I can track what I use and what I like to do with them. Thanks for reading.
-
-Currently this contains:
-- tmux.conf
-- vimrc
-- zshrc
+Current contents:
+- .zshrc
+- .tmux.conf
+- .vimrc
