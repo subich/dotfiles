@@ -2,6 +2,35 @@ python3 import os
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'Valloric/MatchTagAlways'
+Plugin 'ycm-core/YouCompleteMe'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'preservim/nerdcommenter'
+Plugin 'preservim/nerdtree'
+Plugin 'tmsvg/pear-tree'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'preservim/tagbar'
+Plugin 'SirVer/ultisnips'
+Plugin 'mbbill/undotree'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'prettier/vim-prettier'
+Plugin 'honza/vim-snippets'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
 " Change Vim's default color scheme
 colorscheme apprentice
 
