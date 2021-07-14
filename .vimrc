@@ -9,23 +9,30 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'Valloric/MatchTagAlways'
-Plugin 'ycm-core/YouCompleteMe'
+" interface plugins
+Plugin 'mileszs/ack.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'preservim/nerdcommenter'
 Plugin 'preservim/nerdtree'
 Plugin 'tmsvg/pear-tree'
-Plugin 'tpope/vim-surround'
-Plugin 'vim-syntastic/syntastic'
 Plugin 'preservim/tagbar'
-Plugin 'SirVer/ultisnips'
 Plugin 'mbbill/undotree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
+
+" editing plugins
+Plugin 'junegunn/goyo.vim'
+Plugin 'Valloric/MatchTagAlways'
+Plugin 'ycm-core/YouCompleteMe'
+Plugin 'preservim/nerdcommenter'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'SirVer/ultisnips'
+Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'prettier/vim-prettier'
 Plugin 'honza/vim-snippets'
+Plugin 'mg979/vim-visual-multi'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
