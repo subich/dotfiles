@@ -41,8 +41,8 @@ compinit -u
 
 # configure the prompt
 #export PROMPT='%(?|[%B%F{cyan}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f|(%B%F{magenta}%?%f%b%) [%B%F{cyan}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f)'
-autoload -U promptinit; promptinit
 fpath+=$HOME/.zsh/pure
+autoload -U promptinit; promptinit
 prompt pure
 
 # aliases for ls
