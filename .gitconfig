@@ -1,0 +1,12 @@
+[credential]
+	helper = osxkeychain
+[user]
+	name = Stefan
+	email = --global
+[color]
+	ui = auto
+[pager]
+  diff = diff-so-fancy | less --tabs=1,5 -RFX
+  show = diff-so-fancy | less --tabs=1,5 -RFX
+[pull]
+	rebase = false

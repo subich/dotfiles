@@ -55,6 +55,9 @@ alias cat='bat'
 alias ping='prettyping --nolegend'
 alias du="ncdu -rr -x"
 
+# alias to `git pull` multiple subdirs at ones
+alias pullall='find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull origin master \;'
+
 # make git log more readable
 alias gitlog='git log --graph --oneline --decorate --all'
 
