@@ -9,7 +9,7 @@ Contents:
 
 Preferred zsh settings, completion settings, and aliases.
 
-Additional programs needed:
+Additional packages required:
 
 ```
 zsh-syntax-highlighting
