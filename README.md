@@ -1,6 +1,7 @@
 # Dotfiles
 
 Contents:
+
 - [.zshrc](#ZSH)
 - [.tmux.conf](#tmux)
 - [.vimrc](#vim)
@@ -11,7 +12,7 @@ Preferred zsh settings, completion settings, and aliases.
 
 Additional packages required:
 
-```
+```shell
 zsh-syntax-highlighting
 pyenv
 thefuck
@@ -29,6 +30,6 @@ Mostly visual changes, some keybind changes for easier navigation and improvemen
 
 Plugins are managed by [Vundle](https://github.com/VundleVim/Vundle.vim). Download Vundle with the below command, then install plugins in `vim` with `:PluginInstall`.
 
-```
+```shell
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```
