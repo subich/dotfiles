@@ -1,6 +1,6 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""
+" => General "
+""""""""""""""
 set nocompatible              " be iMproved, required
 filetype off                  " required
 python3 import os
@@ -46,9 +46,9 @@ nmap <leader>w :w!<cr>
 command W w !sudo tee % > /dev/null
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugins
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""
+" => Plugins "
+""""""""""""""
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -59,6 +59,7 @@ Plugin 'VundleVim/Vundle.vim'
 " interface plugins
 Plugin 'mileszs/ack.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'junegunn/fzf'
 Plugin 'preservim/nerdtree'
 Plugin 'tmsvg/pear-tree'
 Plugin 'preservim/tagbar'
@@ -85,9 +86,9 @@ Plugin 'mg979/vim-visual-multi'
 call vundle#end()            " required
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""
+" => VIM user interface "
+"""""""""""""""""""""""""
 " Enable mouse in terminals that support it (gpm)
 set mouse=a
 
@@ -135,9 +136,9 @@ if &listchars ==# 'eol:$'
 endif
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""
+" => Colors and Fonts "
+"""""""""""""""""""""""
 " This enabled 256-color support in Vim, which is needed
 " by many color schemes
 set t_Co=256
@@ -156,9 +157,9 @@ if &t_Co == 8 && $TERM !~# '^Eterm'
 endif
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related "
+"""""""""""""""""""""""""""""""""""
 set autoindent
 set backspace=indent,eol,start
 set complete-=i
@@ -177,18 +178,18 @@ set shiftwidth=4
 set expandtab
 
 
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""
+" => Visual mode related "
+""""""""""""""""""""""""""
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers "
+"""""""""""""""""""""""""""""""""""""""""""""""
 " This will make Vim start searching the moment you start
 " typing the first letter of your search keyword
 set incsearch
@@ -235,14 +236,14 @@ map <leader>t<leader> :tabnext
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""
+" => Editing mappings "
+"""""""""""""""""""""""
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""
+" => Spell checking "
+"""""""""""""""""""""
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
@@ -253,9 +254,9 @@ map <leader>sa zg
 map <leader>s? z=
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Misc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""
+" => Misc "
+"""""""""""
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
@@ -300,9 +301,9 @@ if empty(mapcheck('<C-W>', 'i'))
 endif
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""
+" => Helper functions "
+"""""""""""""""""""""""
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
     emenu Foo.Bar
@@ -348,9 +349,9 @@ function! <SID>BufcloseCloseIt()
 endfunction
 
 
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
+""""""""""""""""""
+" => Status line "
+""""""""""""""""""
 " Always display the status line
 set laststatus=2
 
@@ -358,9 +359,9 @@ set laststatus=2
 set noshowmode
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugin settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""
+" => Plugin settings "
+""""""""""""""""""""""
 " This will enable NERDTree to show hidden files
 let NERDTreeShowHidden=1
 " We'll be using this option to modify files directly
