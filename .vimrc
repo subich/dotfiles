@@ -56,30 +56,43 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" interface plugins
+" improved statusbar
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+" git integration improvements
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+" file-finding
+Plugin 'preservim/nerdtree'
 Plugin 'mileszs/ack.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/fzf'
-Plugin 'preservim/nerdtree'
-Plugin 'tmsvg/pear-tree'
-Plugin 'preservim/tagbar'
-Plugin 'mbbill/undotree'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-
-" editing plugins
-Plugin 'junegunn/goyo.vim'
-Plugin 'Valloric/MatchTagAlways'
+" completion engine
 Plugin 'ycm-core/YouCompleteMe'
-Plugin 'preservim/nerdcommenter'
-Plugin 'tpope/vim-surround'
+" syntax checking
 Plugin 'vim-syntastic/syntastic'
-Plugin 'SirVer/ultisnips'
+" auto-match brackets/parens
+Plugin 'tmsvg/pear-tree'
+" highlight maching xml/html tags
+Plugin 'Valloric/MatchTagAlways'
+" visual indent guides
 Plugin 'nathanaelkane/vim-indent-guides'
+" auto code formatting
 Plugin 'prettier/vim-prettier'
+" comment improvements
+Plugin 'preservim/nerdcommenter'
+" easily wrap/change text surrounds
+Plugin 'tpope/vim-surround'
+" snippets
+Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+" file structure browsing
+Plugin 'preservim/tagbar'
+" rich undo history
+Plugin 'mbbill/undotree'
+" distraction-free mode
+Plugin 'junegunn/goyo.vim'
+" multi-cursor modde
 Plugin 'mg979/vim-visual-multi'
 
 " All of your Plugins must be added before the following line
