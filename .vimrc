@@ -380,7 +380,8 @@ let NERDTreeShowHidden=1
 " We'll be using this option to modify files directly
 " inside NERDTree inside Vim, without having to exit Vim
 set modifiable
-
+" Ignore vim swap files in NERDtree
+let NERDTreeIgnore = ['\..*\.swp$']
 
 " Enable folding
 set foldmethod=indent
