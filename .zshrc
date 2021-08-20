@@ -62,7 +62,8 @@ alias pullall='find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$
 # make git log more readable
 alias gitlog='git log --graph --oneline --decorate --all'
 
-# I think this is for some git-related tracking in zsh & maybe vim
+# Improve speed of tab completion for git commands in ZSH
+# See https://stackoverflow.com/questions/9810327/zsh-auto-completion-for-git-takes-significant-amount-of-time-can-i-turn-it-off/9810485#9810485
 __git_files () {
     _wanted files expl 'local files' _files
 }
