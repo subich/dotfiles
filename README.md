@@ -8,25 +8,25 @@ Contents:
 
 ## ZSH
 
+LINK: [.zshrc](https://github.com/subich/dotfiles/blob/master/.zshrc)
+
 Preferred zsh settings, completion settings, and aliases.
 
-Additional packages required:
+Install the required additional packages (with homebrew):
 
 ```shell
-zsh-syntax-highlighting
-pyenv
-thefuck
-bat
-prettyping
-ncdu
-fortune
+brew install zsh-syntax-highlighting pyenv thefuck bat prettyping ncdu fortune
 ```
 
 ## tmux
 
+LINK: [.tmux.conf](https://github.com/subich/dotfiles/blob/master/.tmux.conf)
+
 Mostly visual changes, some keybind changes for easier navigation and improvements for minor annoyances.
 
 ## vim
+
+LINK: [.vimrc](https://github.com/subich/dotfiles/blob/master/.vimrc)
 
 Plugins are managed by [Vundle](https://github.com/VundleVim/Vundle.vim). Download Vundle with the below command, then install plugins in `vim` with `:PluginInstall`.
 
