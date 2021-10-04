@@ -86,14 +86,9 @@ Plugin 'tpope/vim-surround'
 " snippets
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-" file structure browsing
-Plugin 'preservim/tagbar'
-" rich undo history
-Plugin 'mbbill/undotree'
 " distraction-free mode
 Plugin 'junegunn/goyo.vim'
-" multi-cursor modde
-Plugin 'mg979/vim-visual-multi'
+
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
