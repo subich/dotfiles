@@ -69,8 +69,11 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/fzf'
 " completion engine
 Plugin 'ycm-core/YouCompleteMe'
-" syntax checking
+" linting
 Plugin 'vim-syntastic/syntastic'
+" syntax highlight improvents
+Plugin 'pangloss/vim-javascript'
+Plugin 'hdima/python-syntax'
 " auto-match brackets/parens
 Plugin 'tmsvg/pear-tree'
 " highlight maching xml/html tags
@@ -88,7 +91,6 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 " distraction-free mode
 Plugin 'junegunn/goyo.vim'
-
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -152,7 +154,7 @@ endif
 set t_Co=256
 
 " Change Vim's default color scheme
-colorscheme apprentice
+colorscheme deus
 
 " This will enable Vim's syntax highlighting
 if has('syntax') && !exists('g:syntax_on')
@@ -387,6 +389,7 @@ nnoremap <space> za
 
 " force enable powerline fonts
 let g:airline_powerline_fonts = 1
+let g:airline_theme = 'base16'
 
 " syntastic settings
 set statusline+=%#warningmsg#
@@ -397,6 +400,10 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+" vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 2
 
 " UltiSnips settings
 "let g:UltiSnipsExpandTrigger="<Tab>"
