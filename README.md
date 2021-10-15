@@ -10,12 +10,13 @@ Contents:
 
 LINK: [.zshrc](https://github.com/subich/dotfiles/blob/master/.zshrc)
 
-Preferred zsh settings, completion settings, and aliases.
+Preferred zsh settings, completion settings, and aliases. Uses Oh-my-zsh.
 
-Install the required additional packages (with homebrew):
+Install the required additional packages:
 
 ```shell
-brew install zsh-syntax-highlighting pyenv thefuck bat prettyping ncdu fortune
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+brew install pyenv thefuck bat prettyping ncdu
 ```
 
 ## tmux
