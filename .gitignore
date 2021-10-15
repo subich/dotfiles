@@ -26,6 +26,10 @@
 # Swapfiles (sigh)
 .zsh/*.swp
 
+# oh-my-zsh
+!.oh-my-zsh
+!.oh-my-zsh/*
+
 # Git aliases, identification info
 !.gitconfig
 # The gitignore of this repository itself (!)

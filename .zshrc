@@ -1,80 +1,55 @@
-# Login message
-date
-echo "------------------------------"
-fortune -s
+# Path to oh-my-zsh installation
+export ZSH="${HOME}/.oh-my-zsh"
 
-# History options
-HISTFILE=$HOME/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-setopt appendhistory
+ZSH_DISABLE_COMPFIX=true
 
-# search commands with up/down arrows based on already entered text
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
+ZSH_THEME="robbyrussell"
 
-# CD to a directory if only the directory path is entered
-setopt autocd
-setopt extendedglob
+CASE_SENSITIVE="false"
+HYPHEN_INSENSITIVE="true"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+HIST_STAMPS="yyyy-mm-dd"
 
-# set vim bindings for the shell
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+    command-not-found
+    extract
+    fzf
+    git
+    timer
+    vi-mode
+    zsh-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+# vi-like keybinds
 bindkey -v
 
-# The following lines were added by compinstall
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='vim'
+fi
 
-zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _correct _approximate _prefix
-zstyle ':completion:*' expand prefix
-zstyle ':completion:*' ignore-parents parent pwd
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' list-suffixes true
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' max-errors 2
-zstyle ':completion:*' menu select=2
-zstyle ':completion:*' preserve-prefix '//[^/]##/'
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle :compinstall filename '$HOME/.zshrc'
+# display run time for any process over threshold
+TIMER_THRESHOLD=15
 
-autoload -Uz compinit
-compinit -u
-# End of lines added by compinstall
+VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+VI_MODE_SET_CURSOR=true
 
-# configure the prompt
-#export PROMPT='%(?|[%B%F{cyan}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f|(%B%F{magenta}%?%f%b%) [%B%F{cyan}%n@%m%b%F{white}:%F{blue}%~%F{white}]%(#.#.$) %f)'
-fpath+=$HOME/.zsh/pure
-autoload -U promptinit; promptinit
-prompt pure
-
-# aliases for ls
-alias ls='ls -G'
-alias l='ls'
-alias ll='ls -lh'
-alias la='ls -A'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
 # aliases for better versions of some common programs
 alias cat='bat'
 alias ping='prettyping --nolegend'
 alias du="ncdu -rr -x"
 
-# alias to `git pull` multiple subdirs at ones
-alias pullall='find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull origin master \;'
-
-# make git log more readable
-alias gitlog='git log --graph --oneline --decorate --all'
-
-# Improve speed of tab completion for git commands in ZSH
-# See https://stackoverflow.com/questions/9810327/zsh-auto-completion-for-git-takes-significant-amount-of-time-can-i-turn-it-off/9810485#9810485
-__git_files () {
-    _wanted files expl 'local files' _files
-}
-
-# set vim as the default editor
-export EDITOR=/usr/local/bin/vim
-
-# initialize `fuck`
-eval $(thefuck --alias)
 # init pyenv
 eval "$(pyenv init -)"
 
-# better syntax highlighting at the prompt -- this must be last in .zshrc
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
