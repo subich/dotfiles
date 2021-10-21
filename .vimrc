@@ -72,6 +72,12 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'preservim/nerdtree'
 Plugin 'junegunn/fzf'
 
+" tab
+Plugin 'ervandew/supertab'
+" snippets
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
 " completion
 Plugin 'ycm-core/YouCompleteMe'
 
@@ -387,6 +393,18 @@ let NERDTreeIgnore = ['\..*\.swp$']
 " force enable powerline fonts
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'base16'
+
+" SUPERTAB
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" YOUCOMPLETEME
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+
+" ULTISNIPS
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " SYNTASTIC
 set statusline+=%#warningmsg#
