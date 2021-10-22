@@ -166,6 +166,10 @@ if &t_Co == 8 && $TERM !~# '^Eterm'
   set t_Co=16
 endif
 
+" Set spellcheck highlight
+hi clear SpellBad
+hi SpellBad cterm=underline,bold ctermfg=red
+
 
 """""""""""""""""""""""""""""""""""
 " => Text, tab and indent related "
