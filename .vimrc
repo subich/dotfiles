@@ -41,9 +41,13 @@ let g:mapleader = ","
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
+
+" vim's async delay
+" frequency for gitgutter updates and swap file saving
+set updatetime=100 " ms
 
 
 """"""""""""""
@@ -56,39 +60,45 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" improved statusbar
+" statusbar
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-" git integration improvements
+
+" git things
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
+
 " file-finding
 Plugin 'preservim/nerdtree'
-Plugin 'mileszs/ack.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/fzf'
-" completion engine
-Plugin 'ycm-core/YouCompleteMe'
-" linting
-Plugin 'vim-syntastic/syntastic'
-" syntax highlight improvents
-Plugin 'pangloss/vim-javascript'
-Plugin 'hdima/python-syntax'
-" auto-match brackets/parens
-Plugin 'tmsvg/pear-tree'
-" highlight maching xml/html tags
-Plugin 'Valloric/MatchTagAlways'
-" visual indent guides
-Plugin 'nathanaelkane/vim-indent-guides'
-" auto code formatting
-Plugin 'prettier/vim-prettier'
-" comment improvements
-Plugin 'preservim/nerdcommenter'
-" easily wrap/change text surrounds
-Plugin 'tpope/vim-surround'
+
+" tab
+Plugin 'ervandew/supertab'
 " snippets
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+
+" completion
+Plugin 'ycm-core/YouCompleteMe'
+
+" linting
+Plugin 'vim-syntastic/syntastic'
+
+" code formatting
+Plugin 'prettier/vim-prettier'
+
+" auto-match brackets/parens
+Plugin 'tmsvg/pear-tree'
+
+" wrap/change text surrounds
+Plugin 'tpope/vim-surround'
+
+" highlight maching xml/html tags
+Plugin 'Valloric/MatchTagAlways'
+
+" comment toggling
+Plugin 'preservim/nerdcommenter'
+
 " distraction-free mode
 Plugin 'junegunn/goyo.vim'
 
@@ -191,6 +201,13 @@ set shiftwidth=4
 " by pressing Ctrl-V<Tab>
 set expandtab
 
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+
+" Enable folding with the spacebar
+nnoremap <space> za
+
 
 """"""""""""""""""""""""""
 " => Visual mode related "
@@ -246,8 +263,18 @@ map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove 
 map <leader>t<leader> :tabnext 
 
-" Return to last edit position when opening files (You want this!)
+" Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+
+""""""""""""""""""
+" => Status line "
+""""""""""""""""""
+" Always display the status line
+set laststatus=2
+
+" Hide mode; this is shown in airline already
+set noshowmode
 
 
 """""""""""""""""""""""
@@ -286,12 +313,6 @@ map <leader>pp :setlocal paste!<cr>
 if !has('nvim') && &ttimeoutlen == -1
   set ttimeout
   set ttimeoutlen=100
-endif
-
-" dynamically rename tmux window to show current file
-if exists('$TMUX')
-  autocmd BufReadPost,FileReadPost,BufNewFile * call system("tmux rename-window " . expand("%:t"))
-  autocmd VimLeave * call system("tmux setw automatic-rename")
 endif
 
 if v:version > 703 || v:version == 703 && has("patch541")
@@ -363,39 +384,33 @@ function! <SID>BufcloseCloseIt()
 endfunction
 
 
-""""""""""""""""""
-" => Status line "
-""""""""""""""""""
-" Always display the status line
-set laststatus=2
-
-" Hide mode; this is shown in airline already
-set noshowmode
-
-
 """"""""""""""""""""""
 " => Plugin settings "
 """"""""""""""""""""""
-" This will enable NERDTree to show hidden files
+" NERDTREE
 let NERDTreeShowHidden=1
-" We'll be using this option to modify files directly
-" inside NERDTree inside Vim, without having to exit Vim
 set modifiable
 " Ignore vim swap files in NERDtree
 let NERDTreeIgnore = ['\..*\.swp$']
 
-" Enable folding
-set foldmethod=indent
-set foldlevel=99
-
-" Enable folding with the spacebar
-nnoremap <space> za
-
+" AIRLINE
 " force enable powerline fonts
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'base16'
 
-" syntastic settings
+" SUPERTAB
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" YOUCOMPLETEME
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+
+" ULTISNIPS
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" SYNTASTIC
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -405,19 +420,11 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" vim-indent-guides
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_start_level = 2
+let g:syntastic_python_checkers = [ "flake8" ]
 
-" UltiSnips settings
-"let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsExpandTrigger = "<nop>"
-inoremap <expr> <CR> pumvisible() ? "<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>" : "\<CR>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" ctrlp settings
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
+" PEAR TREE
+let g:pear_tree_smart_openers = 1
+let g:pear_tree_smart_closers = 1
+let g:pear_tree_smart_backspace = 1
 
 " vim:set ft=vim et sw=2:
