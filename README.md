@@ -10,7 +10,8 @@ Contents:
 
 LINK: [.zshrc](.zshrc)
 
-Preferred zsh settings, completion settings, and aliases. Uses Oh-my-zsh.
+Preferred zsh settings, completion settings, and aliases.
+Uses Oh-my-zsh.
 
 Install oh-my-zsh:
 ```shell
@@ -26,7 +27,10 @@ pyenv bat prettyping ncdu
 
 LINK: [.vimrc](.vimrc)
 
-Plugins are managed by [Vundle](https://github.com/VundleVim/Vundle.vim). Download Vundle with the below command, then install plugins in `vim` with `:PluginInstall`.
+Plugins are managed by [vim-plug](https://github.com/junegunn/vim-plug).
+Vim-plug is auto-installed if it does not exist.
+Plugins are auto-installed on first start; any plugin additions can be installed with `:PlugInstall`.
+Plugins can be updated with `:PlugUpdate`, and vim-plugin can update itself with `:PlugUpgrade`.
 
 ```shell
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -36,4 +40,4 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 LINK: [.tmux.conf](.tmux.conf)
 
-Mostly visual changes, some keybind changes for easier navigation and improvements for minor annoyances.
+Mostly visual changes; some keybind changes for navigation improvements and minor annoyances.
