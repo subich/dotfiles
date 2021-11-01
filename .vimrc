@@ -1,9 +1,20 @@
-""""""""""""""
-" => General "
-""""""""""""""
+" ============================================================================
+" GENERAL {{{
+" ============================================================================
 set nocompatible              " be iMproved, required
 filetype off                  " required
-python3 import os
+"python3 import os
+
+if has('autocmd')
+  filetype plugin indent on
+endif
+
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
+
+" If a file is modified outside of VIM, read in changes automatically
+set autoread
 
 " Sets how many lines of history VIM has to remember
 if &history < 1000
@@ -18,41 +29,23 @@ endif
 set sessionoptions-=options
 set viewoptions-=options
 
-" This is extremely useful for indenation purposes
-" of several filetypes used in web development
-" as you can simply press gg=G for auto indentation
-if has('autocmd')
-  filetype plugin on
-  filetype indent on
-endif
-
 if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
-
-" If a file is modified outside of VIM, read in changes automatically
-set autoread
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 let mapleader = ","
 let g:mapleader = ","
 
-" Fast saving
-nmap <leader>w :w!<cr>
-
-" :W sudo saves the file
-" (useful for handling the permission-denied error)
-command W w !sudo tee % > /dev/null
-
-" vim's async delay
+" vim internal async delay
 " frequency for gitgutter updates and swap file saving
 set updatetime=100 " ms
 
-
-""""""""""""""
-" => Plugins "
-""""""""""""""
+" }}}
+" ============================================================================
+" VIM-PLUG BLOCK {{{
+" ============================================================================
 " nifty trick to auto-install vim-plug if not installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
@@ -66,6 +59,8 @@ call plug#begin('~/.vim/plugged')
 " statusbar
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+  let g:airline_powerline_fonts = 1
+  let g:airline_theme = 'base16'
 
 " git things
 Plug 'tpope/vim-fugitive'
@@ -73,25 +68,45 @@ Plug 'airblade/vim-gitgutter'
 
 " file-finding
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+  let NERDTreeShowHidden=1
+  set modifiable
+  let NERDTreeIgnore = ['\..*\.swp$']
 Plug 'junegunn/fzf'
 
 " tab
 Plug 'ervandew/supertab'
+  let g:SuperTabDefaultCompletionType = '<C-n>'
 " snippets
 Plug 'SirVer/ultisnips'
+  let g:UltiSnipsExpandTrigger = "<tab>"
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+  let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 Plug 'honza/vim-snippets'
 
 " completion
 Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }
+  let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+  let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 
 " linting
 Plug 'vim-syntastic/syntastic'
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 1
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_python_checkers = [ "flake8" ]
 
 " code formatting
 Plug 'prettier/vim-prettier'
 
 " auto-match brackets/parens
 Plug 'tmsvg/pear-tree'
+  let g:pear_tree_smart_openers = 1
+  let g:pear_tree_smart_closers = 1
+  let g:pear_tree_smart_backspace = 1
 
 " wrap/change text surrounds
 Plug 'tpope/vim-surround'
@@ -106,24 +121,35 @@ Plug 'preservim/nerdcommenter'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 
 " All of your Plugins must be added before the following line
-call plug#end()            " required
+call plug#end()
 
-
-"""""""""""""""""""""""""
-" => VIM user interface "
-"""""""""""""""""""""""""
-" Enable mouse in terminals that support it (gpm)
+" }}}
+" ============================================================================
+" INTERFACE {{{
+" ============================================================================
+" Enable 256-color support in Vim
+set t_Co=256
+colorscheme deus
 set mouse=a
-
-" This option speeds up macro execution in Vim
 set lazyredraw
 
-" Set 7 lines to the cursor - when moving vertically using j/k
+" Always display the status line
+set laststatus=2
+
+" Hide mode; this is shown in airline already
+set noshowmode
+
+" Set 7 lines to the cursor when moving vertically
 set so=7
+
+set number
+set relativenumber
+
+set cursorline
+set cursorcolumn
 
 " Turn on the WiLd menu
 set wildmenu
-
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
@@ -136,14 +162,6 @@ endif
 set showmatch 
 " How many tenths of a second to blink when matching brackets
 set mat=2
-
-" Show line numbers and relative line numbers
-set number
-set relativenumber
-
-" Highlight cursor current line and column
-set cursorline
-set cursorcolumn
 
 " Adjust view when scrolling to show more context
 if !&scrolloff
@@ -158,22 +176,6 @@ if &listchars ==# 'eol:$'
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 endif
 
-
-"""""""""""""""""""""""
-" => Colors and Fonts "
-"""""""""""""""""""""""
-" This enabled 256-color support in Vim, which is needed
-" by many color schemes
-set t_Co=256
-
-" Change Vim's default color scheme
-colorscheme deus
-
-" This will enable Vim's syntax highlighting
-if has('syntax') && !exists('g:syntax_on')
-  syntax enable
-endif
-
 " Allow color schemes to do bright colors without forcing bold.
 if &t_Co == 8 && $TERM !~# '^Eterm'
   set t_Co=16
@@ -183,54 +185,59 @@ endif
 hi clear SpellBad
 hi SpellBad cterm=underline,bold ctermfg=red
 
-
-"""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related "
-"""""""""""""""""""""""""""""""""""
+" }}}
+" ============================================================================
+" SETTINGS {{{
+" ============================================================================
 set autoindent
 set backspace=indent,eol,start
 set complete-=i
 set smarttab
+set incsearch
 
 set nrformats-=octal
 
-" This will make tabs 4 spaces wide
 set tabstop=4
-
-" This is needed to tree tabs as multiple spaces
 set shiftwidth=4
-
-" This option will enable you to enter a real Tab character
-" by pressing Ctrl-V<Tab>
 set expandtab
 
-" Enable folding
-set foldmethod=indent
+set foldmethod=syntax
 set foldlevel=99
+
+" Highlight all search results
+set hlsearch
+
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
+endif
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
+
+if has('path_extra')
+  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+endif
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+" }}}
+" ============================================================================
+" MAPPINGS {{{
+" ============================================================================
+" Fast saving
+nmap <leader>w :w!<cr>
 
 " Enable folding with the spacebar
 nnoremap <space> za
 
-
-""""""""""""""""""""""""""
-" => Visual mode related "
-""""""""""""""""""""""""""
 " Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers "
-"""""""""""""""""""""""""""""""""""""""""""""""
-" This will make Vim start searching the moment you start
-" typing the first letter of your search keyword
-set incsearch
-
-" This will make Vim highlight all search results that
-" matched the search keyword
-set hlsearch
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
@@ -240,7 +247,7 @@ endif
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
-" Smart way to move between windows
+" Move between windows easier
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
@@ -262,41 +269,15 @@ map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove 
 map <leader>t<leader> :tabnext 
 
-" Return to last edit position when opening files
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-
-""""""""""""""""""
-" => Status line "
-""""""""""""""""""
-" Always display the status line
-set laststatus=2
-
-" Hide mode; this is shown in airline already
-set noshowmode
-
-
-"""""""""""""""""""""""
-" => Editing mappings "
-"""""""""""""""""""""""
-
-
-"""""""""""""""""""""
-" => Spell checking "
-"""""""""""""""""""""
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-" Shortcuts using <leader>
+" Spelling shortcuts using <leader>
 map <leader>sn ]s
 map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
-
-"""""""""""
-" => Misc "
-"""""""""""
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
@@ -309,24 +290,6 @@ map <leader>x :e ~/buffer.md<cr>
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 
-if !has('nvim') && &ttimeoutlen == -1
-  set ttimeout
-  set ttimeoutlen=100
-endif
-
-if v:version > 703 || v:version == 703 && has("patch541")
-  set formatoptions+=j " Delete comment character when joining commented lines
-endif
-
-if has('path_extra')
-  setglobal tags-=./tags tags-=./tags; tags^=./tags;
-endif
-
-" Load matchit.vim, but only if the user hasn't installed a newer version.
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
-endif
-
 if empty(mapcheck('<C-U>', 'i'))
   inoremap <C-U> <C-G>u<C-U>
 endif
@@ -334,10 +297,20 @@ if empty(mapcheck('<C-W>', 'i'))
   inoremap <C-W> <C-G>u<C-W>
 endif
 
+" }}}
+" ============================================================================
+" FUNCTIONS & COMMANDS {{{
+" ============================================================================
+" Return to last edit position when opening files
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-"""""""""""""""""""""""
-" => Helper functions "
-"""""""""""""""""""""""
+" :W sudo saves the file
+" (useful for handling the permission-denied error)
+command W w !sudo tee % > /dev/null
+
+" ----------------------------------------------------------------------------
+" Allow * to search selected text
+" ----------------------------------------------------------------------------
 function! CmdLine(str)
   exe "menu Foo.Bar :" . a:str
   emenu Foo.Bar
@@ -361,7 +334,9 @@ function! VisualSelection(direction, extra_filter) range
   let @" = l:saved_reg
 endfunction
 
+" ----------------------------------------------------------------------------
 " Don't close window, when deleting a buffer
+" ----------------------------------------------------------------------------
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
   let l:currentBufNum = bufnr("%")
@@ -382,48 +357,6 @@ function! <SID>BufcloseCloseIt()
   endif
 endfunction
 
-
-""""""""""""""""""""""
-" => Plugin settings "
-""""""""""""""""""""""
-" NERDTREE
-let NERDTreeShowHidden=1
-set modifiable
-" Ignore vim swap files in NERDtree
-let NERDTreeIgnore = ['\..*\.swp$']
-
-" AIRLINE
-" force enable powerline fonts
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'base16'
-
-" SUPERTAB
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" YOUCOMPLETEME
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-
-" ULTISNIPS
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-" SYNTASTIC
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_python_checkers = [ "flake8" ]
-
-" PEAR TREE
-let g:pear_tree_smart_openers = 1
-let g:pear_tree_smart_closers = 1
-let g:pear_tree_smart_backspace = 1
-
-" vim:set ft=vim et sw=2:
+" }}}
+" ============================================================================
+" vim: set foldmethod=marker foldlevel=0 nomodeline ft=vim sw=2 et:
