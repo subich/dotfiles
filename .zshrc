@@ -31,7 +31,8 @@ VI_MODE_SET_CURSOR=true
 export EDITOR='vim'
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
-source $HOME/.access_tokens
+SECRETS=$HOME/.access_tokens
+[ -f "$SECRETS" ] && source $SECRETS
 
 # aliases for better versions of some common programs
 alias cat='bat'
