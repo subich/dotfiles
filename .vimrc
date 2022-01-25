@@ -83,6 +83,7 @@ Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
   set modifiable
   let NERDTreeIgnore = ['\..*\.swp$']
 Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 
 " tab
 Plug 'ervandew/supertab'
