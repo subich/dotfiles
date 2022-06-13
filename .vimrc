@@ -93,6 +93,7 @@ Plug 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger = "<tab>"
   let g:UltiSnipsJumpForwardTrigger = "<tab>"
   let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+  let g:UltiSnipsSnippetDirectories = ["UltiSnips", "personal-snips"]
 Plug 'honza/vim-snippets'
 
 " completion
@@ -111,7 +112,7 @@ Plug 'vim-syntastic/syntastic'
   let g:syntastic_check_on_wq = 0
   let g:syntastic_python_checkers = [ "flake8" ]
 
-" better syntax highlighting
+" syntax highlighting
 Plug 'sheerun/vim-polyglot'
 
 " code formatting
@@ -132,6 +133,11 @@ Plug 'Valloric/MatchTagAlways'
 " comment toggling
 Plug 'preservim/nerdcommenter'
 
+" Dim text outside of the current block
+Plug 'junegunn/limelight.vim'
+  nmap <Leader>L <Plug>(Limelight)
+  xmap <Leader>L <Plug>(Limelight)
+
 " distraction-free mode
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 
@@ -144,7 +150,7 @@ call plug#end()
 " ============================================================================
 " Enable 256-color support in Vim
 set t_Co=256
-colorscheme deus
+colorscheme molokai
 set mouse=a
 set lazyredraw
 
