@@ -67,6 +67,11 @@ endfunction
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 
+" Colorschemes
+Plug 'crusoexia/vim-monokai'
+Plug 'morhetz/gruvbox'
+Plug 'sainnhe/everforest'
+
 " statusbar
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -79,9 +84,10 @@ Plug 'airblade/vim-gitgutter'
 
 " file-finding
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+  map <Leader>n :NERDTreeToggle<CR>
   let NERDTreeShowHidden=1
   set modifiable
-  let NERDTreeIgnore = ['\..*\.swp$']
+  let NERDTreeIgnore = ['\..*\.swp$', '.git', '__pycache__']
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
@@ -135,7 +141,7 @@ Plug 'preservim/nerdcommenter'
 
 " Dim text outside of the current block
 Plug 'junegunn/limelight.vim'
-  nmap <Leader>L <Plug>(Limelight)
+  nmap <Leader>L :Limelight!!<CR>
   xmap <Leader>L <Plug>(Limelight)
 
 " distraction-free mode
@@ -150,7 +156,7 @@ call plug#end()
 " ============================================================================
 " Enable 256-color support in Vim
 set t_Co=256
-colorscheme molokai
+colorscheme monokai
 set mouse=a
 set lazyredraw
 
