@@ -3,7 +3,6 @@
 " ============================================================================
 set nocompatible              " be iMproved, required
 filetype off                  " required
-"python3 import os
 
 if has('autocmd')
   filetype plugin indent on
@@ -68,9 +67,10 @@ endfunction
 call plug#begin('~/.vim/plugged')
 
 " Colorschemes
-Plug 'crusoexia/vim-monokai'
-Plug 'morhetz/gruvbox'
-Plug 'sainnhe/everforest'
+Plug 'crusoexia/vim-monokai'        " Dark only
+Plug 'morhetz/gruvbox'              " Light & Dark
+Plug 'sainnhe/everforest'           " Light & Dark
+Plug 'NLKNguyen/papercolor-theme'   " Light & Dark
 
 " statusbar
 Plug 'vim-airline/vim-airline'
@@ -90,6 +90,9 @@ Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
   let NERDTreeIgnore = ['\..*\.swp$', '.git', '__pycache__']
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+
+" Tag list
+Plug 'yegappan/taglist', { 'on': 'TlistToggle' }
 
 " tab
 Plug 'ervandew/supertab'
@@ -156,7 +159,8 @@ call plug#end()
 " ============================================================================
 " Enable 256-color support in Vim
 set t_Co=256
-colorscheme monokai
+colorscheme papercolor
+
 set mouse=a
 set lazyredraw
 
@@ -214,7 +218,7 @@ hi SpellBad cterm=underline,bold ctermfg=red
 
 " }}}
 " ============================================================================
-" SETTINGS {{{
+" EDITING {{{
 " ============================================================================
 set autoindent
 set backspace=indent,eol,start
@@ -265,6 +269,9 @@ nnoremap <space> za
 " Visual mode pressing * or # searches for the current selection
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+
+" Toggle light/dark mode
+nmap <silent> <leader>bg :call ToggleTheme()<CR>
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
@@ -334,6 +341,20 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
+
+" ----------------------------------------------------------------------------
+" Toggle light/dark mode
+" ----------------------------------------------------------------------------
+function! ToggleTheme()
+  let is_dark=(&background == 'dark')
+  if is_dark
+    set background=light
+    echo "background -> light"
+  else
+    set background=dark
+    echo "background -> dark"
+  endif
+endfunction
 
 " ----------------------------------------------------------------------------
 " Allow * to search selected text
