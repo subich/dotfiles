@@ -38,11 +38,39 @@ alias cat='bat'
 alias ping='prettyping --nolegend'
 
 # useful helper functions
-function pip_update_all() {
+function pip_update_all {
     pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip3 install -U
 }
 
+function ghpr {
+    GH_FORCE_TTY=100% gh pr list \
+    | fzf --ansi --preview 'GH_FORCE_TTY=100% gh pr view {1}' --preview-window down --header-lines 3 \
+    | awk '{print $1}' \
+    | xargs gh pr checkout
+}
+
+function fzf-grep-edit {
+    if [[ $# == 0 ]]; then
+      echo 'Error: search term was not provided.'
+      return
+    fi
+    match=$(
+      rg --color=never --line-number "$1" |
+        fzf --no-multi --delimiter : \
+          --preview "bat --color=always --line-range {2}: {1}"
+      )
+    file=$(echo "$match" | cut -d':' -f1)
+    if [[ -n $file ]]; then
+    # shellcheck disable=SC2046
+      $EDITOR "$file" +$(echo "$match" | cut -d':' -f2)
+    fi
+}
+
+function build-this { docker compose build $@ }
+function run-this { docker compose run ${PWD##*/} $@ }
+alias test-this="run-this pytest"
+alias watch-this="run-this ptw --"
+
 # Init functions, must be last
-eval "$(pyenv init -)"
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
