@@ -59,7 +59,7 @@ function! BuildYCM(info)
   " - status: 'installed', 'updated', or 'unchanged'
   " - force:  set on PlugInstall! or PlugUpdate!
   if a:info.status == 'installed' || a:info.force
-    !./install.py --all
+    !./install.py --ts-completer " if more is needed, substitute --all
   endif
 endfunction
 
@@ -77,6 +77,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
   let g:airline_powerline_fonts = 1
   let g:airline_theme = 'base16'
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline#extensions#ale#enabled = 1
 
 " git things
 Plug 'tpope/vim-fugitive'
@@ -111,21 +113,16 @@ Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
   let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 
 " linting
-Plug 'vim-syntastic/syntastic'
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 1
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_python_checkers = [ "flake8" ]
+Plug 'dense-analysis/ale'
+  let g:ale_python_flake8_options = '--max-line-length=100'
 
 " syntax highlighting
 Plug 'sheerun/vim-polyglot'
 
 " code formatting
-Plug 'prettier/vim-prettier'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'npm install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 
 " auto-match brackets/parens
 Plug 'tmsvg/pear-tree'
@@ -141,6 +138,9 @@ Plug 'Valloric/MatchTagAlways'
 
 " comment toggling
 Plug 'preservim/nerdcommenter'
+
+" visual undo tree
+Plug 'mbbill/undotree'
 
 " Dim text outside of the current block
 Plug 'junegunn/limelight.vim'
@@ -323,6 +323,9 @@ map <leader>x :e ~/buffer.md<cr>
 
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
+
+" Toggle scrollbind
+map <leader>sb :windo set scrollbind!<cr>
 
 if empty(mapcheck('<C-U>', 'i'))
   inoremap <C-U> <C-G>u<C-U>
