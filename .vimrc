@@ -90,10 +90,12 @@ call plug#begin('~/.vim/plugged')
 " Colorschemes
 " Light & Dark
 Plug 'sainnhe/everforest'
-"Plug 'morhetz/gruvbox'
-"Plug 'NLKNguyen/papercolor-theme'
-" Dark only
-"Plug 'crusoexia/vim-monokai'
+if is_full_config
+  Plug 'morhetz/gruvbox'
+  Plug 'NLKNguyen/papercolor-theme'
+  " Dark only
+  Plug 'crusoexia/vim-monokai'
+endif
 
 " statusbar
 Plug 'vim-airline/vim-airline'
