@@ -4,6 +4,9 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" Full config enables nice-to-have, but not critical, plugins and features
+let is_full_config = 0
+
 if has('autocmd')
   filetype plugin indent on
 endif
@@ -45,6 +48,17 @@ set updatetime=100 " ms
 " ============================================================================
 " INTERNAL FUNCTIONS {{{
 " ============================================================================
+" YCM update hook
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !./install.py --ts-completer " if more is needed, substitute --all
+  endif
+endfunction
+
 " returns all modified files of the current git repo
 " `2>/dev/null` makes the command fail quietly, so that when we are not
 " in a git repo, the list will be empty
@@ -70,25 +84,16 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" YCM update hook
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  " - name:   name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-    !./install.py --ts-completer " if more is needed, substitute --all
-  endif
-endfunction
-
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 
 " Colorschemes
-Plug 'crusoexia/vim-monokai'        " Dark only
-Plug 'morhetz/gruvbox'              " Light & Dark
-Plug 'sainnhe/everforest'           " Light & Dark
-Plug 'NLKNguyen/papercolor-theme'   " Light & Dark
+" Light & Dark
+Plug 'sainnhe/everforest'
+"Plug 'morhetz/gruvbox'
+"Plug 'NLKNguyen/papercolor-theme'
+" Dark only
+"Plug 'crusoexia/vim-monokai'
 
 " statusbar
 Plug 'vim-airline/vim-airline'
@@ -97,18 +102,6 @@ Plug 'vim-airline/vim-airline-themes'
   let g:airline_theme = 'base16'
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#ale#enabled = 1
-
-" Start page
-Plug 'mhinz/vim-startify'
-let g:startify_lists = [
-  \ { 'type': 'files',     'header': ['   MRU']            },
-  \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-  \ { 'type': 'sessions',  'header': ['   Sessions']       },
-  \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-  \ { 'type': function('s:gitModified'),  'header': ['   git modified']},
-  \ { 'type': function('s:gitUntracked'), 'header': ['   git untracked']},
-  \ { 'type': 'commands',  'header': ['   Commands']       },
-  \ ]
 
 " git things
 Plug 'tpope/vim-fugitive'
@@ -120,31 +113,6 @@ Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
   let NERDTreeShowHidden=1
   set modifiable
   let NERDTreeIgnore = ['\..*\.swp$', '.git', '__pycache__']
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
-
-" Tag list
-Plug 'yegappan/taglist', { 'on': 'TlistToggle' }
-
-" tab
-Plug 'ervandew/supertab'
-  let g:SuperTabDefaultCompletionType = '<C-n>'
-" snippets
-Plug 'SirVer/ultisnips'
-  let g:UltiSnipsExpandTrigger = "<tab>"
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-  let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-  let g:UltiSnipsSnippetDirectories = ["UltiSnips", "personal-snips"]
-Plug 'honza/vim-snippets'
-
-" completion
-Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
-  let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-  let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-
-" linting
-Plug 'dense-analysis/ale'
-  let g:ale_python_flake8_options = '--max-line-length=100'
 
 " syntax highlighting
 Plug 'sheerun/vim-polyglot'
@@ -169,16 +137,58 @@ Plug 'Valloric/MatchTagAlways'
 " comment toggling
 Plug 'preservim/nerdcommenter'
 
-" visual undo tree
-Plug 'mbbill/undotree'
+if is_full_config
+  " Start page
+  Plug 'mhinz/vim-startify'
+  let g:startify_lists = [
+    \ { 'type': 'files',     'header': ['   MRU']            },
+    \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+    \ { 'type': 'sessions',  'header': ['   Sessions']       },
+    \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+    \ { 'type': function('s:gitModified'),  'header': ['   git modified']},
+    \ { 'type': function('s:gitUntracked'), 'header': ['   git untracked']},
+    \ { 'type': 'commands',  'header': ['   Commands']       },
+    \ ]
 
-" Dim text outside of the current block
-Plug 'junegunn/limelight.vim'
-  nmap <Leader>L :Limelight!!<CR>
-  xmap <Leader>L <Plug>(Limelight)
+  # Fuzzy file-finding
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
 
-" distraction-free mode
-Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
+  " Tag list
+  Plug 'yegappan/taglist', { 'on': 'TlistToggle' }
+
+  " tab
+  Plug 'ervandew/supertab'
+    let g:SuperTabDefaultCompletionType = '<C-n>'
+
+  " snippets
+  Plug 'SirVer/ultisnips'
+    let g:UltiSnipsExpandTrigger = "<tab>"
+    let g:UltiSnipsJumpForwardTrigger = "<tab>"
+    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+    let g:UltiSnipsSnippetDirectories = ["UltiSnips", "personal-snips"]
+  Plug 'honza/vim-snippets'
+
+  " completion
+  Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
+    let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+    let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+
+  " linting
+  Plug 'dense-analysis/ale'
+    let g:ale_python_flake8_options = '--max-line-length=100'
+
+  " visual undo tree
+  Plug 'mbbill/undotree'
+
+  " distraction-free mode
+  Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
+
+  " Dim text outside of the current block
+  Plug 'junegunn/limelight.vim'
+    nmap <Leader>L :Limelight!!<CR>
+    xmap <Leader>L <Plug>(Limelight)
+endif
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -220,7 +230,7 @@ else
 endif
 
 " Show matching brackets when text indicator is over them
-set showmatch 
+set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -330,8 +340,8 @@ map <leader>h :bprevious<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext
 
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
@@ -396,7 +406,7 @@ function! CmdLine(str)
   exe "menu Foo.Bar :" . a:str
   emenu Foo.Bar
   unmenu Foo
-endfunction 
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
   let l:saved_reg = @"
