@@ -23,7 +23,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-TIMER_THRESHOLD=15 # display if exec time > this
+TIMER_THRESHOLD=15  # display if exec time > this
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
@@ -69,7 +69,9 @@ function fzf-grep-edit {
 function build-this { docker compose build $@ }
 function run-this { docker compose run ${PWD##*/} $@ }
 alias test-this="run-this pytest"
-alias watch-this="run-this ptw --"
+alias watch-this="run-this pytest-watch -c --"
+alias up-this="docker compose up"
+alias down-this="docker compose down"
 
 # Init functions, must be last
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
