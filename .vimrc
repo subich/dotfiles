@@ -4,9 +4,6 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" Full config enables nice-to-have, but not critical, plugins and features
-let is_full_config = 0
-
 if has('autocmd')
   filetype plugin indent on
 endif
@@ -35,43 +32,12 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
+let mapleader = "<space>"
+let g:mapleader = "<space>"
 
 " vim internal async delay
 " frequency for gitgutter updates and swap file saving
 set updatetime=100 " ms
-
-" }}}
-" ============================================================================
-" INTERNAL FUNCTIONS {{{
-" ============================================================================
-" YCM update hook
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  " - name:   name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-    !./install.py --ts-completer " if more is needed, substitute --all
-  endif
-endfunction
-
-" returns all modified files of the current git repo
-" `2>/dev/null` makes the command fail quietly, so that when we are not
-" in a git repo, the list will be empty
-function! s:gitModified()
-    let files = systemlist('git ls-files -m 2>/dev/null')
-    return map(files, "{'line': v:val, 'path': v:val}")
-endfunction
-
-" same as above, but show untracked files, honouring .gitignore
-function! s:gitUntracked()
-    let files = systemlist('git ls-files -o --exclude-standard 2>/dev/null')
-    return map(files, "{'line': v:val, 'path': v:val}")
-endfunction
 
 " }}}
 " ============================================================================
@@ -88,14 +54,10 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " Colorschemes
-" Light & Dark
-Plug 'sainnhe/everforest'
-if is_full_config
-  Plug 'morhetz/gruvbox'
-  Plug 'NLKNguyen/papercolor-theme'
-  " Dark only
-  Plug 'crusoexia/vim-monokai'
-endif
+Plug 'sainnhe/everforest'           " Light & Dark
+"Plug 'crusoexia/vim-monokai'        " Dark only
+"Plug 'morhetz/gruvbox'              " Light & Dark
+"Plug 'NLKNguyen/papercolor-theme'   " Light & Dark
 
 " statusbar
 Plug 'vim-airline/vim-airline'
@@ -116,13 +78,12 @@ Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
   set modifiable
   let NERDTreeIgnore = ['\..*\.swp$', '.git', '__pycache__']
 
+" tab
+Plug 'ervandew/supertab'
+  let g:SuperTabDefaultCompletionType = '<C-n>'
+
 " syntax highlighting
 Plug 'sheerun/vim-polyglot'
-
-" code formatting
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'npm install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 
 " auto-match brackets/parens
 Plug 'tmsvg/pear-tree'
@@ -133,64 +94,8 @@ Plug 'tmsvg/pear-tree'
 " wrap/change text surrounds
 Plug 'tpope/vim-surround'
 
-" highlight maching xml/html tags
-Plug 'Valloric/MatchTagAlways'
-
 " comment toggling
 Plug 'preservim/nerdcommenter'
-
-if is_full_config
-  " Start page
-  Plug 'mhinz/vim-startify'
-  let g:startify_lists = [
-    \ { 'type': 'files',     'header': ['   MRU']            },
-    \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-    \ { 'type': 'sessions',  'header': ['   Sessions']       },
-    \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-    \ { 'type': function('s:gitModified'),  'header': ['   git modified']},
-    \ { 'type': function('s:gitUntracked'), 'header': ['   git untracked']},
-    \ { 'type': 'commands',  'header': ['   Commands']       },
-    \ ]
-
-  # Fuzzy file-finding
-  Plug 'junegunn/fzf'
-  Plug 'junegunn/fzf.vim'
-
-  " Tag list
-  Plug 'yegappan/taglist', { 'on': 'TlistToggle' }
-
-  " tab
-  Plug 'ervandew/supertab'
-    let g:SuperTabDefaultCompletionType = '<C-n>'
-
-  " snippets
-  Plug 'SirVer/ultisnips'
-    let g:UltiSnipsExpandTrigger = "<tab>"
-    let g:UltiSnipsJumpForwardTrigger = "<tab>"
-    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-    let g:UltiSnipsSnippetDirectories = ["UltiSnips", "personal-snips"]
-  Plug 'honza/vim-snippets'
-
-  " completion
-  Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
-    let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-    let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-
-  " linting
-  Plug 'dense-analysis/ale'
-    let g:ale_python_flake8_options = '--max-line-length=100'
-
-  " visual undo tree
-  Plug 'mbbill/undotree'
-
-  " distraction-free mode
-  Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
-
-  " Dim text outside of the current block
-  Plug 'junegunn/limelight.vim'
-    nmap <Leader>L :Limelight!!<CR>
-    xmap <Leader>L <Plug>(Limelight)
-endif
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -232,7 +137,7 @@ else
 endif
 
 " Show matching brackets when text indicator is over them
-set showmatch
+set showmatch 
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -305,9 +210,6 @@ endif
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" Enable folding with the spacebar
-nnoremap <space> za
-
 " Visual mode pressing * or # searches for the current selection
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
@@ -342,8 +244,8 @@ map <leader>h :bprevious<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>tm :tabmove 
+map <leader>t<leader> :tabnext 
 
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
@@ -408,7 +310,7 @@ function! CmdLine(str)
   exe "menu Foo.Bar :" . a:str
   emenu Foo.Bar
   unmenu Foo
-endfunction
+endfunction 
 
 function! VisualSelection(direction, extra_filter) range
   let l:saved_reg = @"
