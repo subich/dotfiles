@@ -1,6 +1,9 @@
 local function nullSources()
   local builtins = require("null-ls").builtins
   return {
+    -- SPELLING
+    builtins.completion.spell,
+
     -- LUA
     builtins.formatting.stylua,
 
