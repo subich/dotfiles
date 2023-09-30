@@ -4,26 +4,32 @@ local function nullSources()
     -- SPELLING
     builtins.completion.spell,
 
-    -- SHELL
-    builtins.code_actions.shellcheck,
-
     -- LUA
     builtins.formatting.stylua,
 
+    -- SHELL
+    builtins.code_actions.shellcheck,
+
     -- CLOUDFORMATION
     builtins.diagnostics.cfn_lint,
+
+    -- TERRAFORM
+    builtins.diagnostics.terraform_validate,
 
     -- JAVASCRIPT
     builtins.diagnostics.eslint,
 
     -- PYTHON
-    -- builtins.diagnostics.flake8,
     builtins.diagnostics.pylint,
+    -- builtins.diagnostics.mypy,
+    -- builtins.diagnostics.flake8.with({
+    --   extra_args = { "--config", vim.fn.expand("~/.config/flake8") },
+    -- }),
   }
 end
 
 return {
-  "jose-elias-alvarez/null-ls.nvim",
+  "nvimtools/none-ls.nvim",
   event = { "BufReadPre", "BufNewFile" },
   dependencies = { "mason.nvim" },
   opts = function()
