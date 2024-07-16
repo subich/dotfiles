@@ -1,24 +1,17 @@
-local g = vim.g
+vim.o.background = "dark"
 
-g.darkTransparency = 0.92
-g.lightTransparency = 0.93
-
+-- append lazy = false, priority = 1000 to default
 return {
-  { "catppuccin/nvim", name = "catppuccin" },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "rebelot/kanagawa.nvim" },
+  { "sainnhe/everforest" },
   { "ellisonleao/gruvbox.nvim" },
-  { "kaiuri/nvim-juliana" },
   { "marko-cerovac/material.nvim" },
   { "olimorris/onedarkpro.nvim" },
   { "rmehri01/onenord.nvim" },
-  { "sainnhe/everforest" },
-  { "savq/melange-nvim" },
-  { "shaunsingh/moonlight.nvim" },
-  { "tanvirtin/monokai.nvim" },
 
   {
     "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "everforest",
-    },
+    opts = { colorscheme = "everforest" },
   },
 }

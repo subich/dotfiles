@@ -1,5 +1,14 @@
 return {
   {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- required
+      "sindrets/diffview.nvim", -- optional - Diff integration
+      "nvim-telescope/telescope.nvim", -- optional
+    },
+    config = true,
+  },
+  {
     "akinsho/git-conflict.nvim",
     version = "*",
     config = true,
@@ -9,11 +18,7 @@ return {
     opts = {},
     init = function()
       local wk = require("which-key")
-      wk.register({
-        g = {
-          y = "Copy GitHub permalink",
-        },
-      }, { prefix = "<leader>" })
+      wk.add({ "<leader>gy", desc = "Copy GitHub permalink" })
     end,
   },
   {
@@ -21,22 +26,13 @@ return {
     init = function()
       local wk = require("which-key")
       local gs = require("gitsigns")
-      wk.register({
-        g = {
-          b = "Toggle current line blame",
-        },
-      }, { prefix = "<leader>" })
-
-      vim.keymap.set("n", "<leader>gb", gs.toggle_current_line_blame)
+      wk.add({ "<leader>gz", gs.toggle_current_line_blame, desc = "Toggle current line blame" })
     end,
     opts = {
       current_line_blame = true,
       current_line_blame_opts = {
         virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
         ignore_whitespace = true,
-      },
-      current_line_blame_formatter_opts = {
-        relative_time = true,
       },
     },
   },
