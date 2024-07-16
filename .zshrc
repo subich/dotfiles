@@ -1,78 +1,55 @@
 # Path to your oh-my-zsh installation.
 export ZSH="${HOME}/.oh-my-zsh"
 
-ZSH_DISABLE_COMPFIX=true
-
-ZSH_THEME="robbyrussell"
 CASE_SENSITIVE="false"
-HYPHEN_INSENSITIVE="true"
-ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
+ENABLE_CORRECTION="true"
 HIST_STAMPS="yyyy-mm-dd"
+HYPHEN_INSENSITIVE="true"
+ZSH_DISABLE_COMPFIX=true
+ZSH_THEME="robbyrussell"
 
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    asdf
+    aws
+    docker
+    docker-compose
     extract
     fzf
+    gh
     git
+    gitignore
+    iterm2
+    jira
+    thefuck
     timer
+    tmux
     vi-mode
+    zoxide
 )
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-TIMER_THRESHOLD=15  # display if exec time > this
+export EDITOR='nvim'
+
+# OMZ plugin settings
+TIMER_THRESHOLD=15 # display if exec time > this
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
-export EDITOR='vim'
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+source $HOME/.access_tokens
 
-SECRETS=$HOME/.access_tokens
-[ -f "$SECRETS" ] && source $SECRETS
+# Set personal aliases, overriding those provided by Oh My Zsh libs,
+# plugins, and themes. Aliases can be placed here, though Oh My Zsh
+# users are encouraged to define aliases within a top-level file in
+# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
+# - $ZSH_CUSTOM/aliases.zsh
+# - $ZSH_CUSTOM/macos.zsh
+# For a full list of active aliases, run `alias`.
 
-# aliases for better versions of some common programs
-alias cat='bat'
-alias ping='prettyping --nolegend'
-
-# useful helper functions
-function pip_update_all {
-    pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip3 install -U
-}
-
-function ghpr {
-    GH_FORCE_TTY=100% gh pr list \
-    | fzf --ansi --preview 'GH_FORCE_TTY=100% gh pr view {1}' --preview-window down --header-lines 3 \
-    | awk '{print $1}' \
-    | xargs gh pr checkout
-}
-
-function fzf-grep-edit {
-    if [[ $# == 0 ]]; then
-      echo 'Error: search term was not provided.'
-      return
-    fi
-    match=$(
-      rg --color=never --line-number "$1" |
-        fzf --no-multi --delimiter : \
-          --preview "bat --color=always --line-range {2}: {1}"
-      )
-    file=$(echo "$match" | cut -d':' -f1)
-    if [[ -n $file ]]; then
-    # shellcheck disable=SC2046
-      $EDITOR "$file" +$(echo "$match" | cut -d':' -f2)
-    fi
-}
-
-function build-this { docker compose build $@ }
-function run-this { docker compose run ${PWD##*/} $@ }
-alias test-this="run-this pytest"
-alias watch-this="run-this pytest-watch -c --"
-alias up-this="docker compose up"
-alias down-this="docker compose down"
-
-# Init functions, must be last
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
