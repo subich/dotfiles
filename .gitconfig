@@ -1,12 +1,47 @@
+[include]
+    path = ~/.config/delta/themes.gitconfig
+[core]
+	pager = delta
+	excludesfile = ~/.config/git/ignore
 [credential]
-	helper = osxkeychain
-[user]
-	name = Stefan
-	email = --global
+    helper = osxkeychain
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+    navigate = true
+    light = false
+    line-numbers = true
+[merge]
+    conflictstyle = diff3
+[diff]
+	colorMoved = default
 [color]
-	ui = auto
-[pager]
-  diff = diff-so-fancy | less --tabs=1,5 -RFX
-  show = diff-so-fancy | less --tabs=1,5 -RFX
-[pull]
-	rebase = false
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	func = 146 bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[user]
+	email = stef@hey.com
+	name = Stefan
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[init]
+	defaultBranch = master
+[push]
+	autoSetupRemote = true
+	default = current
+[branch]
+    sort = -committerdate
