@@ -53,3 +53,4 @@ source $HOME/.access_tokens
 
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+eval "$(starship init zsh)"
