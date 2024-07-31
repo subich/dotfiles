@@ -12,7 +12,6 @@ ZSH_THEME="robbyrussell"
 
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    asdf
     aws
     docker
     docker-compose
@@ -22,12 +21,10 @@ plugins=(
     git
     gitignore
     iterm2
-    jira
-    thefuck
+    mise
     timer
     tmux
     vi-mode
-    zoxide
 )
 
 source $ZSH/oh-my-zsh.sh
