@@ -4,7 +4,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim", -- required
       "sindrets/diffview.nvim", -- optional - Diff integration
-      "nvim-telescope/telescope.nvim", -- optional
     },
     config = true,
   },
@@ -16,24 +15,17 @@ return {
   {
     "ruifm/gitlinker.nvim",
     opts = {},
-    init = function()
-      local wk = require("which-key")
-      wk.add({ "<leader>gy", desc = "Copy GitHub permalink" })
-    end,
+    keys = {
+      { "<leader>gy", desc = "Copy GitHub permalink" },
+    },
   },
   {
     "lewis6991/gitsigns.nvim",
-    init = function()
-      local wk = require("which-key")
-      local gs = require("gitsigns")
-      wk.add({ "<leader>gz", gs.toggle_current_line_blame, desc = "Toggle current line blame" })
-    end,
     opts = {
       current_line_blame = true,
-      current_line_blame_opts = {
-        virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
-        ignore_whitespace = true,
-      },
+    },
+    keys = {
+      { "<leader>gz", require("gitsigns").toggle_current_line_blame, desc = "Toggle current line blame" },
     },
   },
 }

@@ -2,7 +2,7 @@ vim.o.background = "dark"
 
 -- append lazy = false, priority = 1000 to default
 return {
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim", name = "catppuccin" },
   { "rebelot/kanagawa.nvim" },
   { "sainnhe/everforest" },
   { "ellisonleao/gruvbox.nvim" },
@@ -12,6 +12,6 @@ return {
 
   {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "everforest" },
+    opts = { colorscheme = "catppuccin" },
   },
 }

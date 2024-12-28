@@ -13,16 +13,6 @@ return {
           },
         },
       },
-      snyk_ls = {
-        init_options = {
-          activateSnykOpenSource = "true",
-          activateSnykCode = "true",
-          activateSnykIac = "true",
-          enableTrustedFoldersFeature = "false", -- Whether or not LS will prompt to trust a folder (default: true)
-          integrationName = "neovim",
-          token = "",
-        },
-      },
       yamlls = {
         settings = {
           editor = {
