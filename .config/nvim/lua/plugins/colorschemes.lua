@@ -1,6 +1,3 @@
-vim.o.background = "dark"
-
--- append lazy = false, priority = 1000 to default
 return {
   { "catppuccin/nvim", name = "catppuccin" },
   { "rebelot/kanagawa.nvim" },
