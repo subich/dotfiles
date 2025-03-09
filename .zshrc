@@ -25,6 +25,7 @@ plugins=(
     timer
     tmux
     vi-mode
+    zoxide
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -38,7 +39,7 @@ VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-source $HOME/.access_tokens
+[ -f "$HOME/.access_tokens" ] && source $HOME/.access_tokens
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -50,4 +51,3 @@ source $HOME/.access_tokens
 
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-eval "$(starship init zsh)"

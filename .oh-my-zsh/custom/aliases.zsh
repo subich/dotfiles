@@ -1,7 +1,7 @@
 # aliases for better versions of some common programs
-alias cat='bat'
-alias ping='prettyping --nolegend'
-alias lg='lazygit'
+command -v bat && alias cat='bat'
+command -v prettyping && alias ping='prettyping --nolegend'
+command -v lazygit && alias lg='lazygit'
 
 # useful helper functions
 function build-this { docker compose build $@ }
@@ -16,23 +16,6 @@ function ghprco {
     | fzf --ansi --preview 'GH_FORCE_TTY=100% gh pr view {1}' --preview-window down --header-lines 4 \
     | awk '{print $1}' \
     | xargs gh pr checkout
-}
-
-function fzf-grep-edit {
-    if [[ $# == 0 ]]; then
-      echo 'Error: search term was not provided.'
-      return
-    fi
-    match=$(
-      rg --color=never --line-number "$1" |
-        fzf --no-multi --delimiter : \
-          --preview "bat --color=always --line-range {2}: {1}"
-      )
-    file=$(echo "$match" | cut -d':' -f1)
-    if [[ -n $file ]]; then
-    # shellcheck disable=SC2046
-      $EDITOR "$file" +$(echo "$match" | cut -d':' -f2)
-    fi
 }
 
 function connect_to_workgroup {
