@@ -22,19 +22,17 @@ plugins=(
     gitignore
     iterm2
     mise
-    timer
-    tmux
     vi-mode
     zoxide
 )
 
+zstyle :omz:plugins:iterm2 shell-integration yes
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export EDITOR='nvim'
 
 # OMZ plugin settings
-TIMER_THRESHOLD=15 # display if exec time > this
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
