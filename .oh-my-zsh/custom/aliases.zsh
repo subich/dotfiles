@@ -1,7 +1,7 @@
 # aliases for better versions of some common programs
-command -v bat && alias cat='bat'
-command -v prettyping && alias ping='prettyping --nolegend'
-command -v lazygit && alias lg='lazygit'
+command -v bat > /dev/null && alias cat='bat'
+command -v prettyping > /dev/null && alias ping='prettyping --nolegend'
+command -v lazygit > /dev/null && alias lg='lazygit'
 
 # useful helper functions
 function build-this { docker compose build $@ }
