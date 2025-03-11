@@ -15,7 +15,6 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # Homebrew casks
-cask "bartender"
 cask "docker"
 cask "istat-menus"
 cask "iterm2"
