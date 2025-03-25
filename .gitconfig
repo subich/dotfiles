@@ -2,18 +2,18 @@
   path = ~/.config/delta/themes.gitconfig
 
 [core]
-	pager = delta
-	excludesfile = ~/.config/git/ignore
+  pager = delta
+  excludesfile = ~/.config/git/ignore
 
 [user]
-	email = 20615740+subich@users.noreply.github.com
-	name = Stefan
+  email = 20615740+subich@users.noreply.github.com
+  name = Stefan
 
 [credential]
   helper = osxkeychain
 
 [interactive]
-	diffFilter = delta --color-only
+  diffFilter = delta --color-only
 
 [delta]
   navigate = true
@@ -36,31 +36,31 @@
   renames = true
 
 [color]
-	ui = true
+  ui = true
 
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
 
 [color "diff"]
-	meta = 11
-	frag = magenta bold
-	func = 146 bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+  meta = 11
+  frag = magenta bold
+  func = 146 bold
+  commit = yellow bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
 
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 
 [init]
-	defaultBranch = main
+  defaultBranch = main
 
 [fetch]
   prune = true
