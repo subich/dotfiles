@@ -1,8 +1,16 @@
+# Install:
+#   brew bundle --global
+# Sync (cleanup):
+#   brew bundle --global --force cleanup
+
+cask_args appdir: "/Applications", require_sha: true
+
 # Homebrew formulae
 brew "fd"
 brew "fzf"
 brew "gh"
 brew "git-delta"
+brew "jq"
 brew "lazygit"
 brew "mas"
 brew "mise"
