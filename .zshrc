@@ -31,6 +31,7 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export EDITOR='nvim'
+export PAGER=less
 
 # OMZ plugin settings
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
