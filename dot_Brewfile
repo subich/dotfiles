@@ -6,6 +6,7 @@
 cask_args appdir: "/Applications", require_sha: true
 
 # Homebrew formulae
+brew "chezmoi"
 brew "fd"
 brew "fzf"
 brew "gh"
@@ -17,7 +18,6 @@ brew "mise"
 brew "neovim"
 brew "ripgrep"
 brew "tmux"
-brew "yadm"
 brew "zoxide"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
