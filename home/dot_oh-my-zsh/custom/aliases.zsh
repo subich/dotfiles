@@ -4,19 +4,11 @@ command -v prettyping > /dev/null && alias ping='prettyping --nolegend'
 command -v lazygit > /dev/null && alias lg='lazygit'
 
 # useful helper functions
-function build-this { docker compose build $@ }
 function run-this { docker compose run ${PWD##*/} $@ }
 alias test-this="run-this pytest"
 alias watch-this="run-this ptw -c --"
 
 alias awslocal="aws --endpoint-url 'http://localhost:4566'"
-
-function ghprco {
-    GH_FORCE_TTY=100% gh pr list \
-    | fzf --ansi --preview 'GH_FORCE_TTY=100% gh pr view {1}' --preview-window down --header-lines 4 \
-    | awk '{print $1}' \
-    | xargs gh pr checkout
-}
 
 function connect_to_workgroup {
   # Connect to a Redshift serverless workgroup.
