@@ -23,6 +23,7 @@ function connect_to_workgroup {
   user=$(echo $creds | jq '.dbUser' | tr -d '"')
   echo "Connecting to database as $user..."
 
+  connection_string="postgresql://${workgroup_name}.${aws_account_id}.us-east-1.redshift-serverless.amazonaws.com:5439/dev"
   PGPASSWORD=$(echo $creds | jq '.dbPassword' | tr -d '"') \
-  psql postgresql://$workgroup_name.$aws_account_id.us-east-1.redshift-serverless.amazonaws.com:5439/dev $user
+  psql $connection_string $user
 }
