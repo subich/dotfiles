@@ -8,6 +8,9 @@
 [user]
   email = {{ .email | quote }}
   name = Stefan Subich
+  {{- if .gpg_signingkey }}
+  signingkey = {{ .gpg_signingkey | quote }}
+  {{- end }}
 
 [credential]
   helper = osxkeychain
