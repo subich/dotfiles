@@ -9,6 +9,16 @@ return {
       python = { "pylint" },
       shell = { "shellcheck" },
       sql = { "sqlfluff" },
+      terraform = { "tfsec" },
+      yaml = { "cfn_lint" },
+    },
+    linters = {
+      cfn_lint = {
+        ignore_exitcode = true,
+        condition = function(ctx)
+          return string.find(ctx.filename, "cfn")
+        end,
+      },
     },
   },
 }
