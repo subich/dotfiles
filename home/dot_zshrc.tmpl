@@ -36,9 +36,9 @@ export PAGER='less'
 
 export GPG_TTY=$(tty)
 
-{{ range .additional_path_entries }}
+{{- range .additional_path_entries }}
 export PATH="$PATH:{{ . }}"
-{{ end }}
+{{- end }}
 
 # OMZ plugin settings
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
