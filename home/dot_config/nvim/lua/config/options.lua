@@ -6,7 +6,7 @@
 vim.g.autoformat = false
 
 -- LSP to use for Python
-vim.g.lazyvim_python_lsp = "basedpyright"
+vim.g.lazyvim_python_lsp = "pyright"
 
 -- Neovide specific options
 vim.o.guifont = "BerkeleyMono Nerd Font:h12"
