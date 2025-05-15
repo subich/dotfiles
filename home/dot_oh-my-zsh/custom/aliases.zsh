@@ -15,15 +15,15 @@ function connect_to_workgroup {
   # Requires an active AWS session
   workgroup_name=$1
 
-  aws_account_id=$(aws sts get-caller-identity | jq '.Account' | tr -d '"')
+  aws_account_id=$(aws sts get-caller-identity | jq -r '.Account')
 
   echo "Getting credentials for $workgroup_name in account $aws_account_id..."
   creds=$(aws redshift-serverless get-credentials --workgroup-name $workgroup_name)
 
-  user=$(echo $creds | jq '.dbUser' | tr -d '"')
+  user=$(echo $creds | jq -r '.dbUser')
   echo "Connecting to database as $user..."
 
   connection_string="postgresql://${workgroup_name}.${aws_account_id}.us-east-1.redshift-serverless.amazonaws.com:5439/dev"
-  PGPASSWORD=$(echo $creds | jq '.dbPassword' | tr -d '"') \
+  PGPASSWORD=$(echo $creds | jq -r '.dbPassword') \
   psql $connection_string $user
 }
