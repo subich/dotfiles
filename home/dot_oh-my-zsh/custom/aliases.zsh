@@ -27,3 +27,19 @@ function connect_to_workgroup {
   PGPASSWORD=$(echo $creds | jq -r '.dbPassword') \
   psql $connection_string $user
 }
+
+function connect_to_workgroup_admin {
+  workgroup_name=$1
+
+  aws_account_id=$(aws sts get-caller-identity | jq -r '.Account')
+
+  echo "Getting admin credentials for $workgroup_name in account $aws_account_id..."
+  creds=$(aws secretsmanager get-secret-value --secret-id "redshift!${workgroup_name}-admin" | jq -r '.SecretString')
+
+  user=$(echo $creds | jq -r '.username')
+  echo "Connecting to database as $user..."
+
+  connection_string="postgresql://${workgroup_name}.${aws_account_id}.us-east-1.redshift-serverless.amazonaws.com:5439/dev"
+  PGPASSWORD=$(echo $creds | jq -r '.password') \
+  psql $connection_string $user
+}
