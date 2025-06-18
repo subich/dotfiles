@@ -88,4 +88,7 @@
   autocorrect = prompt
 
 [commit]
+  {{- if .gpg_signingkey }}
+  gpgsign = true
+  {{- end }}
   verbose = true
