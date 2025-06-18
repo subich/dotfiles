@@ -12,7 +12,7 @@ git:
     pager: delta --dark --paging=never
 
   # If true, do not spawn a separate process when using GPG
-  overrideGpg: false
+  overrideGpg: true
 
   commitPrefix: []
   commitPrefixes: {}
