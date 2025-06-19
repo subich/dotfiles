@@ -13,7 +13,7 @@ install_brew() {
 
 if [ "$system_type" = "Darwin" ]; then
   install_brew
-  if [ -f "$HOME/.config/homebrew/Brewfile" ]; then
+  if [ -f "$HOME/.Brewfile" ]; then
     echo "Updating homebrew bundle"
     brew bundle --global
   fi
