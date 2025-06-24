@@ -4,9 +4,9 @@ command -v prettyping > /dev/null && alias ping='prettyping --nolegend'
 command -v lazygit > /dev/null && alias lg='lazygit'
 
 # useful helper functions
-function run-this { docker compose run ${PWD##*/} $@ }
+function run-this { docker compose run --remove-orphans ${PWD##*/} $@ }
 alias test-this="run-this pytest"
-alias watch-this="run-this ptw -c --"
+alias watch-this="run-this pytest-watcher --now --clear . --"
 
 alias awslocal="aws --endpoint-url 'http://localhost:4566'"
 
