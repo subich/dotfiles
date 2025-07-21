@@ -33,9 +33,10 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # Homebrew casks
-cask "1password", args: { appdir: "/Applications" }
-cask "1password-cli", args: { appdir: "/Applications" }
+cask_args appdir: "/Applications", require_sha: true
+cask "1password"
+cask "1password-cli"
 cask "font-jetbrains-mono-nerd-font"
-cask "istat-menus"
-cask "iterm2", args: { appdir: "/Applications" }
-cask "raycast", args: { appdir: "/Applications" }
+cask "istat-menus", args: { require_sha: false }
+cask "iterm2"
+cask "raycast"
