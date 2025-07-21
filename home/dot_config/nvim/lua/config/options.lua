@@ -9,13 +9,12 @@ vim.g.autoformat = false
 vim.g.lazyvim_python_lsp = "pyright"
 
 -- Neovide specific options
-vim.o.guifont = "BerkeleyMono Nerd Font:h12"
-
 local change_scale_factor = function(delta)
   vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
 end
 
 if vim.g.neovide then
+  vim.o.guifont = "BerkeleyMono Nerd Font:h12"
   vim.g.neovide_hide_mouse_when_typing = true
 
   vim.g.neovide_opacity = 0.8
