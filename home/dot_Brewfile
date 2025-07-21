@@ -3,31 +3,39 @@
 # Sync (cleanup):
 #   brew bundle --global --force cleanup
 
+tap "homebrew/bundle"
+
 cask_args appdir: "/Applications", require_sha: true
 
 # Homebrew formulae
 brew "chezmoi"
+brew "colima"
+brew "docker"
 brew "fd"
 brew "fzf"
 brew "gh"
+brew "git"
 brew "git-delta"
-brew "gpg"
+brew "gnupg"
+brew "htop"
 brew "jq"
 brew "lazygit"
 brew "mas"
 brew "mise"
 brew "neovim"
 brew "pinentry-mac"
+brew "prettyping"
 brew "ripgrep"
+brew "starship"
 brew "tmux"
 brew "zoxide"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # Homebrew casks
-cask "docker"
-cask "1password"
-cask "1password-cli"
+cask "1password", args: { appdir: "/Applications" }
+cask "1password-cli", args: { appdir: "/Applications" }
+cask "font-jetbrains-mono-nerd-font"
 cask "istat-menus"
-cask "iterm2"
-cask "raycast"
+cask "iterm2", args: { appdir: "/Applications" }
+cask "raycast", args: { appdir: "/Applications" }
