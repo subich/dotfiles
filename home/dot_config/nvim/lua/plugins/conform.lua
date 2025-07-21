@@ -5,7 +5,7 @@ return {
       css = { "stylelint" },
       lua = { "stylua" },
       shell = { "shfmt" },
-      sql = { "sqlfluff" },
+      sql = { "sqlfluff", timeout_ms = 30000 },
       ["*"] = { "codespell" },
       ["_"] = { "trim_whitespace" },
     },
