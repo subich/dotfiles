@@ -33,7 +33,6 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # Homebrew casks
-cask_args appdir: "/Applications", require_sha: true
 cask "1password"
 cask "1password-cli"
 cask "font-jetbrains-mono-nerd-font"
