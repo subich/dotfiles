@@ -9,7 +9,10 @@ gui:
 git:
   paging:
     colorArg: always
-    pager: delta --dark --paging=never
+    pager: >
+      delta
+      --dark --paging=never --line-numbers
+      --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 
   # If true, do not spawn a separate process when using GPG
   overrideGpg: true
