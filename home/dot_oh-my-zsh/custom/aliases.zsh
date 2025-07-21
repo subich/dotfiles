@@ -1,5 +1,5 @@
 # aliases for better versions of some common programs
-command -v bat > /dev/null && alias cat='bat'
+command -v bat > /dev/null && alias cat='bat --paging never --decorations never --plain'
 command -v prettyping > /dev/null && alias ping='prettyping --nolegend'
 command -v lazygit > /dev/null && alias lg='lazygit'
 
