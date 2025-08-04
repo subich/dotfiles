@@ -1,25 +1,31 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-$character\
 $directory\
 $git_branch\
 $username\
+$container\
+$docker_context\
+$nodejs\
+$python\
+$rust\
+$aws
 $sudo\
 $git_state\
-$git_status
+$git_status\
+($jobs$container$git_metrics)\
+$character
 """
 
 right_format = """
 $cmd_duration\
-($jobs$container$git_metrics)\
 $battery\
 $status
 """
 
 continuation_prompt = "[▸▹ ](dimmed white)"
 
-add_newline = false
+add_newline = true
 palette = 'tokyonight'
 
 [palettes.gruvbox_dark]
