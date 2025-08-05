@@ -1,6 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
+$os\
 $directory\
 $git_branch\
 $username\
@@ -9,6 +10,7 @@ $docker_context\
 $nodejs\
 $python\
 $rust\
+$package\
 $aws
 $sudo\
 $git_state\
@@ -106,13 +108,14 @@ repo_root_format = """
 "Developer" = "󰲋 "
 
 [docker_context]
+disabled = true
 symbol = " "
-format = 'via [🐋 $context](blue bold)'
+format = '[$symbol$context](blue bold) '
 
 [git_branch]
-symbol = " "
+symbol = "  "
 style = "italic fg:color_red"
-format = '[ [$symbol](fg:color_aqua) $branch(:$remote_branch) ]($style)'
+format = '[[$symbol](fg:color_aqua)$branch(:$remote_branch)]($style) '
 truncation_symbol = "⋯"
 truncation_length = 11
 
@@ -140,10 +143,11 @@ format = "[$symbol$number]($style) "
 
 [nodejs]
 symbol = " "
-format = 'via [🤖 $version](bold green) '
+format = '[$symbol$version](bold green) '
 
 [os]
 disabled = false
+format = '[$symbol ]($style)'
 style = "fg:color_fg0"
 
 [os.symbols]
@@ -169,11 +173,13 @@ Redhat = "󱄛"
 RedHatEnterprise = "󱄛"
 
 [package]
+disabled = true
 symbol = "󰏗 "
-format = 'via [🎁 $version](208 bold) '
+format = '[$symbol$version](208 bold) '
 
 [python]
 symbol = " "
+format = '[$symbol$version](bold yellow) '
 
 [rust]
 symbol = "󱘗 "
