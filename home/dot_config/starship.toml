@@ -25,7 +25,7 @@ $battery\
 $status
 """
 
-continuation_prompt = "[▸▹ ](dimmed white)"
+continuation_prompt = "[▸▹ ](dimmed color_fg0)"
 
 add_newline = true
 palette = 'tokyonight'
@@ -55,7 +55,7 @@ vimcmd_visual_symbol = '[ ](bold fg:color_yellow)'
 # Segment configurations
 [aws]
 format = 'on [$symbol($profile )(\($region\) )]($style)'
-style = 'bold blue'
+style = 'bold color_blue'
 symbol = '  '
 
 [battery]
@@ -79,7 +79,7 @@ threshold = 70
 style = "italic dimmed fg:color_yellow"
 
 [cmd_duration]
-style = "italic fg:color_white"
+style = "italic fg:color_fg0"
 format = "[◄ $duration ]($style)"
 
 [container]
@@ -110,7 +110,7 @@ repo_root_format = """
 [docker_context]
 disabled = true
 symbol = " "
-format = '[$symbol$context](blue bold) '
+format = '[$symbol$context](color_blue bold) '
 
 [git_branch]
 symbol = "  "
@@ -137,13 +137,13 @@ format = '[($all_status$ahead_behind )]($style)'
 ssh_symbol = " "
 
 [jobs]
-style = "fg:color_white"
+style = "fg:color_fg0"
 symbol = "[▶](fg:color_blue italic)"
 format = "[$symbol$number]($style) "
 
 [nodejs]
 symbol = " "
-format = '[$symbol$version](bold green) '
+format = '[$symbol$version](bold color_green) '
 
 [os]
 disabled = false
@@ -175,11 +175,11 @@ RedHatEnterprise = "󱄛"
 [package]
 disabled = true
 symbol = "󰏗 "
-format = '[$symbol$version](208 bold) '
+format = '[$symbol$version](color_orange bold) '
 
 [python]
 symbol = " "
-format = '[$symbol$version](bold yellow) '
+format = '[$symbol$version](bold color_yellow) '
 
 [rust]
 symbol = "󱘗 "
@@ -190,7 +190,7 @@ style = "bold fg:color_blue"
 format = "[$symbol]($style)"
 
 [time]
-style = "italic dimmed fg:color_white"
+style = "italic dimmed fg:color_fg0"
 format = "[ $time]($style)"
 time_format = "%R"
 utc_time_offset = "local"
