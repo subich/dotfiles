@@ -173,7 +173,7 @@ Redhat = "󱄛"
 RedHatEnterprise = "󱄛"
 
 [package]
-disabled = true
+disabled = false
 symbol = "󰏗 "
 format = '[$symbol$version](color_orange bold) '
 
