@@ -1,16 +1,23 @@
 return {
-  { "catppuccin/nvim", name = "catppuccin", lazy = true },
+  {
+    "akinsho/bufferline.nvim",
+    init = function()
+      local bufline = require("catppuccin.groups.integrations.bufferline")
+      function bufline.get()
+        return bufline.get_theme()
+      end
+    end,
+  },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000, lazy = false },
 
   { "folke/tokyonight.nvim", lazy = true },
   { "marko-cerovac/material.nvim", lazy = true },
   { "olimorris/onedarkpro.nvim", lazy = true },
-  { "rebelot/kanagawa.nvim", lazy = true },
   { "rmehri01/onenord.nvim", lazy = true },
   { "sainnhe/everforest", lazy = true },
-  { "webhooked/kanso.nvim", lazy = true },
 
   {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "material" },
+    opts = { colorscheme = "catppuccin" },
   },
 }
