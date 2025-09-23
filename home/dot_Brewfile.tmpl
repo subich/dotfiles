@@ -3,8 +3,6 @@
 # Sync (cleanup):
 #   brew bundle --global --force cleanup
 
-tap "homebrew/bundle"
-
 cask_args appdir: "/Applications", require_sha: true
 
 # Homebrew formulae
@@ -30,7 +28,6 @@ brew "prettyping"
 brew "ripgrep"
 brew "starship"
 brew "tmux"
-brew "tree-sitter-cli"
 brew "zoxide"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
@@ -39,7 +36,7 @@ brew "zsh-syntax-highlighting"
 cask "1password"
 cask "1password-cli"
 {{- if eq .container_runtime "docker" }}
-cask "docker"
+cask "docker-desktop"
 {{- end }}
 cask "font-jetbrains-mono-nerd-font"
 # cask "istat-menus", args: { require_sha: false }
