@@ -9,5 +9,10 @@ return {
       ["*"] = { "codespell" },
       ["_"] = { "trim_whitespace" },
     },
+    formatters = {
+      sqlfluff = {
+        args = { "format", "-" },
+      },
+    },
   },
 }

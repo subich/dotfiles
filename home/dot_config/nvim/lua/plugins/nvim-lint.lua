@@ -18,6 +18,9 @@ return {
           return string.find(ctx.filename, "cfn")
         end,
       },
+      sqlfluff = {
+        args = { "lint", "--format=json" },
+      },
     },
   },
 }
