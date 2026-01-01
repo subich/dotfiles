@@ -9,6 +9,10 @@ cask_args appdir: "/Applications", require_sha: true
 brew "chezmoi"
 {{- if eq .container_runtime "colima" }}
 brew "colima"
+brew "docker-buildx"
+brew "docker-completion"
+brew "docker-compose"
+brew "docker-credential-helper"
 {{- end }}
 brew "docker"
 brew "fd"
