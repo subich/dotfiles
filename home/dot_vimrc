@@ -55,9 +55,7 @@ call plug#begin('~/.vim/plugged')
 
 " Colorschemes
 Plug 'sainnhe/everforest'           " Light & Dark
-"Plug 'crusoexia/vim-monokai'        " Dark only
 "Plug 'morhetz/gruvbox'              " Light & Dark
-"Plug 'NLKNguyen/papercolor-theme'   " Light & Dark
 
 " statusbar
 Plug 'vim-airline/vim-airline'
