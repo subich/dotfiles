@@ -4,7 +4,17 @@ return {
     opts = {
       cli = {
         tools = {
-          copilot = { cmd = { "copilot", "--banner", "--allow-tool", "write" } },
+          copilot = {
+            cmd = {
+              "copilot",
+              "--banner",
+              "--allow-all-tools",
+              "--deny-tool",
+              "shell(git push)",
+              "--deny-tool",
+              "shell(rm)",
+            },
+          },
         },
       },
     },
