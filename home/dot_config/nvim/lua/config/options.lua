@@ -16,8 +16,8 @@ end
 if vim.g.neovide then
   vim.o.guifont = "BerkeleyMono Nerd Font:h12"
 
-  vim.g.neovide_opacity = 0.8
-  vim.g.neovide_normal_opacity = 0.8
+  vim.g.neovide_opacity = 0.9
+  vim.g.neovide_normal_opacity = 0.9
   vim.g.neovide_scale_factor = 1.0
 
   vim.keymap.set("n", "<C-=>", function()

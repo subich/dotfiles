@@ -1,47 +1,5 @@
 " ============================================================================
-" GENERAL {{{
-" ============================================================================
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-if has('autocmd')
-  filetype plugin indent on
-endif
-
-if has('syntax') && !exists('g:syntax_on')
-  syntax enable
-endif
-
-" If a file is modified outside of VIM, read in changes automatically
-set autoread
-
-" Sets how many lines of history VIM has to remember
-if &history < 1000
-  set history=1000
-endif
-if &tabpagemax < 50
-  set tabpagemax=50
-endif
-if !empty(&viminfo)
-  set viminfo^=!
-endif
-set sessionoptions-=options
-set viewoptions-=options
-
-if &encoding ==# 'latin1' && has('gui_running')
-  set encoding=utf-8
-endif
-
-let mapleader = "<space>"
-let g:mapleader = "<space>"
-
-" vim internal async delay
-" frequency for gitgutter updates and swap file saving
-set updatetime=100 " ms
-
-" }}}
-" ============================================================================
-" VIM-PLUG BLOCK {{{
+" PLUGINS {{{
 " ============================================================================
 " nifty trick to auto-install vim-plug if not installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -100,103 +58,162 @@ call plug#end()
 
 " }}}
 " ============================================================================
-" INTERFACE {{{
+" VIM OPTIONS {{{
 " ============================================================================
-" Enable 256-color support in Vim
-set t_Co=256
-colorscheme everforest
+" ============================================================================
+" Basic Settings
+" ============================================================================
+set nocompatible              " Use Vim settings rather than Vi
+filetype off                  " Required for plugin setup
 
-set mouse=a
-set lazyredraw
+if has('autocmd')
+  filetype plugin indent on
+endif
 
-" Always display the status line
-set laststatus=2
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
 
-" Hide mode; this is shown in airline already
-set noshowmode
+" Encoding
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
 
-" Set 7 lines to the cursor when moving vertically
-set so=7
+" File handling
+set autoread                  " Auto-reload files modified outside of Vim
 
-set number
-set relativenumber
+" System clipboard integration
+set clipboard=unnamed
 
-set cursorline
-set cursorcolumn
+" ============================================================================
+" History & Session Settings
+" ============================================================================
+if &history < 1000
+  set history=1000            " Command history limit
+endif
+if &tabpagemax < 50
+  set tabpagemax=50           " Maximum number of tab pages
+endif
+if !empty(&viminfo)
+  set viminfo^=!              " Store global variables in viminfo
+endif
+set sessionoptions-=options   " Don't save options in sessions
+set viewoptions-=options      " Don't save options in views
 
-" Turn on the WiLd menu
-set wildmenu
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc
+" ============================================================================
+" Leader Key
+" ============================================================================
+let mapleader = "<space>"
+let g:mapleader = "<space>"
+
+" ============================================================================
+" Performance
+" ============================================================================
+set updatetime=100            " Faster updates for gitgutter & swap file writes (ms)
+set lazyredraw                " Don't redraw during macros
+
+" ============================================================================
+" Color Scheme & Visual Settings
+" ============================================================================
+set t_Co=256                  " Enable 256-color support
+try
+  colorscheme everforest
+  set background=dark
+catch
+endtry
+
+" Allow color schemes to do bright colors without forcing bold
+if &t_Co == 8 && $TERM !~# '^Eterm'
+  set t_Co=16
+endif
+
+" Spell check highlighting
+hi clear SpellBad
+hi SpellBad cterm=underline,bold ctermfg=red
+
+" ============================================================================
+" UI Layout
+" ============================================================================
+set mouse=a                   " Enable mouse support
+set laststatus=2              " Always show status line
+set noshowmode                " Hide mode (shown in airline)
+set number                    " Show line numbers
+set relativenumber            " Show relative line numbers
+set cursorline                " Highlight current line
+set cursorcolumn              " Highlight current column
+set so=7                      " Keep 7 lines visible around cursor vertically
+
+" Command-line completion
+set wildmenu                  " Visual autocomplete for command menu
+set wildignore=*.o,*~,*.pyc   " Ignore compiled files
 if has("win16") || has("win32")
   set wildignore+=.git\*,.hg\*,.svn\*
 else
   set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
-" Show matching brackets when text indicator is over them
-set showmatch
-" How many tenths of a second to blink when matching brackets
-set mat=2
+" Bracket matching
+set showmatch                 " Highlight matching brackets
+set mat=2                     " Blink duration for matching brackets (tenths of second)
 
-" Adjust view when scrolling to show more context
+" Scrolling behavior
 if !&scrolloff
-  set scrolloff=1
+  set scrolloff=1             " Minimum lines to keep above/below cursor
 endif
 if !&sidescrolloff
-  set sidescrolloff=5
+  set sidescrolloff=5         " Minimum columns to keep left/right of cursor
 endif
-set display+=lastline
+set display+=lastline         " Show as much of last line as possible
 
+" Whitespace visualization
 if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+  set listchars=tab:→\ ,trail:·,extends:»,precedes:«,nbsp:␣,eol:↲
 endif
 
-" Allow color schemes to do bright colors without forcing bold.
-if &t_Co == 8 && $TERM !~# '^Eterm'
-  set t_Co=16
-endif
-
-" Set spell check highlight
-hi clear SpellBad
-hi SpellBad cterm=underline,bold ctermfg=red
-
-" }}}
 " ============================================================================
-" EDITING {{{
+" Indentation & Formatting
 " ============================================================================
-set autoindent
-set backspace=indent,eol,start
-set complete-=i
-set smarttab
-set incsearch
-
-set nrformats-=octal
-
-set tabstop=4
-set shiftwidth=4
-set expandtab
-
-set foldmethod=indent
-set foldlevel=99
-
-" Highlight all search results
-set hlsearch
-
-if !has('nvim') && &ttimeoutlen == -1
-  set ttimeout
-  set ttimeoutlen=100
-endif
+set autoindent                " Copy indent from current line
+set smarttab                  " Smart tab behavior
+set tabstop=4                 " Tab width
+set shiftwidth=4              " Indent width
+set expandtab                 " Use spaces instead of tabs
+set backspace=indent,eol,start " Allow backspace over everything
 
 if v:version > 703 || v:version == 703 && has("patch541")
-  set formatoptions+=j " Delete comment character when joining commented lines
+  set formatoptions+=j        " Delete comment leader when joining lines
 endif
 
+" Code folding
+set foldmethod=indent         " Fold based on indentation
+set foldlevel=99              " Open all folds by default
+
+" ============================================================================
+" Search Settings
+" ============================================================================
+set incsearch                 " Incremental search
+set hlsearch                  " Highlight search results
+set ignorecase                " Case-insensitive search
+set smartcase                 " Override ignorecase if search contains uppercase
+
+" ============================================================================
+" Advanced Settings
+" ============================================================================
+set complete-=i               " Don't scan included files for completion
+set nrformats-=octal          " Don't treat numbers with leading zeros as octal
+
+" Key code timeout
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100         " Faster key code timeout
+endif
+
+" Tag file handling
 if has('path_extra')
   setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
 
-" Load matchit.vim, but only if the user hasn't installed a newer version.
+" Load matchit.vim for enhanced % matching
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
@@ -211,9 +228,6 @@ nmap <leader>w :w!<cr>
 " Visual mode pressing * or # searches for the current selection
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
-" Toggle light/dark mode
-nmap <silent> <leader>bg :call ToggleTheme()<CR>
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
@@ -283,23 +297,12 @@ endif
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+autocmd BufRead,BufNewFile *.py setlocal shiftwidth=2 tabstop=2 softtabstop=2 " Indentation for Python
+autocmd BufRead,BufNewFile *.js setlocal shiftwidth=2 tabstop=2 softtabstop=2 " Indentation for JavaScript
+
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
-
-" ----------------------------------------------------------------------------
-" Toggle light/dark mode
-" ----------------------------------------------------------------------------
-function! ToggleTheme()
-  let is_dark=(&background == 'dark')
-  if is_dark
-    set background=light
-    echo "background -> light"
-  else
-    set background=dark
-    echo "background -> dark"
-  endif
-endfunction
 
 " ----------------------------------------------------------------------------
 " Allow * to search selected text
