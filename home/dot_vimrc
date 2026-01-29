@@ -212,9 +212,6 @@ nmap <leader>w :w!<cr>
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
-" Toggle light/dark mode
-nmap <silent> <leader>bg :call ToggleTheme()<CR>
-
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
@@ -286,20 +283,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
-
-" ----------------------------------------------------------------------------
-" Toggle light/dark mode
-" ----------------------------------------------------------------------------
-function! ToggleTheme()
-  let is_dark=(&background == 'dark')
-  if is_dark
-    set background=light
-    echo "background -> light"
-  else
-    set background=dark
-    echo "background -> dark"
-  endif
-endfunction
 
 " ----------------------------------------------------------------------------
 " Allow * to search selected text
