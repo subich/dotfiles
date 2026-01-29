@@ -1,6 +1,6 @@
 # aliases for better versions of some common programs
-command -v prettyping > /dev/null && alias ping='prettyping --nolegend'
-command -v lazygit > /dev/null && alias lg='lazygit'
+command -v prettyping > /dev/null 2>&1 && alias ping='prettyping --nolegend'
+command -v lazygit > /dev/null 2>&1 && alias lg='lazygit'
 
 # Use bat as pager and cat replacement
 # https://github.com/sharkdp/bat
@@ -30,6 +30,7 @@ fi
 
 # useful helper functions
 function run-this { docker compose run --remove-orphans ${PWD##*/} $@ }
+
 alias test-this="run-this pytest"
 alias watch-this="run-this pytest-watcher --now --clear . --"
 
