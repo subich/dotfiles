@@ -35,41 +35,36 @@ alias watch-this="run-this pytest-watcher --now --clear . --"
 
 alias awslocal="aws --endpoint-url 'http://localhost:4566'"
 
-function connect_to_workgroup {
-  # Connect to a Redshift serverless workgroup.
-  # Requires an active AWS session
-  workgroup_name=$1
-
-  aws_account_id=$(aws sts get-caller-identity | jq -r '.Account')
-
-  echo "Getting credentials for $workgroup_name in account $aws_account_id..."
-  creds=$(aws redshift-serverless get-credentials --workgroup-name $workgroup_name)
-
-  user=$(echo $creds | jq -r '.dbUser')
-  echo "Connecting to database as $user..."
-
-  connection_string="postgresql://${workgroup_name}.${aws_account_id}.us-east-1.redshift-serverless.amazonaws.com:5439/dev"
-  PGPASSWORD=$(echo $creds | jq -r '.dbPassword') \
-  psql $connection_string $user
-}
-
-function connect_to_workgroup_admin {
-  workgroup_name=$1
-
-  aws_account_id=$(aws sts get-caller-identity | jq -r '.Account')
-
-  echo "Getting admin credentials for $workgroup_name in account $aws_account_id..."
-  creds=$(aws secretsmanager get-secret-value --secret-id "redshift!${workgroup_name}-admin" | jq -r '.SecretString')
-
-  user=$(echo $creds | jq -r '.username')
-  echo "Connecting to database as $user..."
-
-  connection_string="postgresql://${workgroup_name}.${aws_account_id}.us-east-1.redshift-serverless.amazonaws.com:5439/dev"
-  PGPASSWORD=$(echo $creds | jq -r '.password') \
-  psql $connection_string $user
-}
-
 # Kill everything running on a specific port
 function killport() {
   kill $(lsof -iTCP -sTCP:LISTEN -n -P | grep $1 | awk '{print $2}')
+}
+
+function _connect_to_redshift {
+  local workgroup_name=$1
+  local user=$2
+  local password=$3
+  local aws_account_id=$(aws sts get-caller-identity | jq -r '.Account')
+
+  echo "Connecting to database as $user..."
+  local connection_string="postgresql://${workgroup_name}.${aws_account_id}.us-east-1.redshift-serverless.amazonaws.com:5439/dev"
+  PGPASSWORD=$password psql $connection_string $user
+}
+
+function connect_to_workgroup {
+  # Connect to a Redshift serverless workgroup.
+  # Requires an active AWS session
+  local workgroup_name=$1
+  echo "Getting credentials for $workgroup_name..."
+  local creds=$(aws redshift-serverless get-credentials --workgroup-name $workgroup_name)
+
+  _connect_to_redshift $workgroup_name $(echo $creds | jq -r '.dbUser') $(echo $creds | jq -r '.dbPassword')
+}
+
+function connect_to_workgroup_admin {
+  local workgroup_name=$1
+  echo "Getting admin credentials for $workgroup_name..."
+  local creds=$(aws secretsmanager get-secret-value --secret-id "redshift!${workgroup_name}-admin" | jq -r '.SecretString')
+
+  _connect_to_redshift $workgroup_name $(echo $creds | jq -r '.username') $(echo $creds | jq -r '.password')
 }
