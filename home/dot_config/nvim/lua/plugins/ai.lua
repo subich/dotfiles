@@ -11,8 +11,6 @@ return {
               "--allow-all-tools",
               "--deny-tool",
               "shell(git push)",
-              "--deny-tool",
-              "shell(rm)",
             },
           },
         },
