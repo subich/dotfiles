@@ -7,6 +7,7 @@ cask_args appdir: "/Applications", require_sha: true
 
 # Homebrew formulae
 brew "chezmoi"
+brew "bat"
 {{- if eq .container_runtime "colima" }}
 brew "colima"
 brew "docker-buildx"
