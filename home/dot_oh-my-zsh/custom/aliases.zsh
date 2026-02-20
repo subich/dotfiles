@@ -69,3 +69,15 @@ function connect_to_workgroup_admin {
 
   _connect_to_redshift $workgroup_name $(echo $creds | jq -r '.username') $(echo $creds | jq -r '.password')
 }
+
+function set_aws_profile {
+  if [ -z "$1" ]; then
+    unset AWS_PROFILE
+    unset AWS_DEFAULT_REGION
+    echo "AWS profile cleared"
+  else
+    export AWS_PROFILE=$1
+    export AWS_DEFAULT_REGION=us-east-1
+    echo "AWS profile set to $AWS_PROFILE"
+  fi
+}

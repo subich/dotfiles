@@ -54,8 +54,6 @@ vimcmd_visual_symbol = '[ ](bold fg:color_yellow)'
 
 # Segment configurations
 [aws]
-format = 'on [$symbol($profile )(\($region\) )]($style)'
-style = 'bold color_blue'
 symbol = '  '
 
 [battery]
