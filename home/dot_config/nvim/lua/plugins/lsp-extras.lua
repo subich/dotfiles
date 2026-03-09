@@ -6,7 +6,7 @@ return {
       snyk_ls = {
         init_options = {
           activateSnykCode = "true",
-          trustedFolders = { "~/Developer/" },
+          trustedFolders = { vim.fn.expand("~/Developer/") },
         },
       },
       yamlls = {
