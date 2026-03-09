@@ -72,9 +72,23 @@ function connect_to_workgroup_admin {
 
 function set_aws_profile {
   if [ -z "$1" ]; then
-    unset AWS_PROFILE
-    unset AWS_DEFAULT_REGION
-    echo "AWS profile cleared"
+    local profiles
+    profiles=$(grep '^\[' ~/.aws/credentials 2>/dev/null | sed 's/^\[\(.*\)\]$/\1/')
+    if [ -z "$profiles" ]; then
+      echo "No profiles found in ~/.aws/credentials"
+      return 1
+    fi
+    local selected
+    selected=$(echo "$profiles" | fzf --prompt="Select AWS profile (ESC to clear): " --height=~10)
+    if [ -z "$selected" ]; then
+      unset AWS_PROFILE
+      unset AWS_DEFAULT_REGION
+      echo "AWS profile cleared"
+    else
+      export AWS_PROFILE="$selected"
+      export AWS_DEFAULT_REGION=us-east-1
+      echo "AWS profile set to $AWS_PROFILE"
+    fi
   else
     export AWS_PROFILE=$1
     export AWS_DEFAULT_REGION=us-east-1
