@@ -6,7 +6,6 @@ function alias_if() {
   command -v "$cmd" > /dev/null 2>&1 && alias "$@"
 }
 
-# aliases for better versions of some common programs
 alias_if ping='prettyping --nolegend'
 alias_if lg='lazygit'
 
@@ -36,9 +35,7 @@ if command -v eza >/dev/null 2>&1; then
   alias lt5='lt --level=5'
 fi
 
-# useful helper functions
 function run-this { docker compose run --remove-orphans ${PWD##*/} $@ }
-
 alias test-this="run-this pytest"
 alias watch-this="run-this pytest-watcher --now --clear . --"
 
