@@ -1,6 +1,14 @@
+# Create an alias only if the program in the alias value exists
+# Usage: alias_if <alias_name>=<alias_value>
+function alias_if() {
+  local cmd="${1#*=}"  # strip everything up to and including the =
+  cmd="${cmd%% *}"     # take the first word as the program name
+  command -v "$cmd" > /dev/null 2>&1 && alias "$@"
+}
+
 # aliases for better versions of some common programs
-command -v prettyping > /dev/null 2>&1 && alias ping='prettyping --nolegend'
-command -v lazygit > /dev/null 2>&1 && alias lg='lazygit'
+alias_if ping='prettyping --nolegend'
+alias_if lg='lazygit'
 
 # Use bat as pager and cat replacement
 # https://github.com/sharkdp/bat
