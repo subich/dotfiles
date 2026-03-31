@@ -31,12 +31,6 @@ plugins=(
 zstyle :omz:plugins:iterm2 shell-integration yes
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-export EDITOR="$(which nvim)"
-export PAGER='less'
-
-export GPG_TTY="$(tty)"
-
 {{- range .additional_path_entries }}
 export PATH="$PATH:{{ . }}"
 {{- end }}
@@ -48,7 +42,6 @@ VI_MODE_SET_CURSOR=true
 export ZSH_HIGHLIGHT_MAXLENGTH=200
 
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-[ -f "$HOME/.access_tokens" ] && source $HOME/.access_tokens
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
