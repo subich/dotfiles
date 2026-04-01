@@ -31,10 +31,6 @@ plugins=(
 zstyle :omz:plugins:iterm2 shell-integration yes
 source $ZSH/oh-my-zsh.sh
 
-{{- range .additional_path_entries }}
-export PATH="$PATH:{{ . }}"
-{{- end }}
-
 # OMZ plugin settings
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
