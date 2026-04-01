@@ -1,9 +1,13 @@
 eval "$(/opt/homebrew/bin/mise activate zsh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-[ -f "$HOME/.access_tokens" ] && source $HOME/.access_tokens
-
 export EDITOR="$(which nvim)"
 export PAGER='less'
 
 export GPG_TTY="$(tty)"
+
+[ -f "$HOME/.access_tokens" ] && source $HOME/.access_tokens
+
+{{- range .additional_path_entries }}
+export PATH="$PATH:{{ . }}"
+{{- end }}
