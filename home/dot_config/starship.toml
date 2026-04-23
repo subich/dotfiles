@@ -21,6 +21,7 @@ $character
 
 right_format = """
 $cmd_duration\
+$time\
 $battery\
 $status
 """
@@ -188,8 +189,9 @@ style = "bold fg:color_blue"
 format = "[$symbol]($style)"
 
 [time]
+disabled = false
 style = "italic dimmed fg:color_fg0"
-format = "[ $time]($style)"
+format = "[$time ]($style)"
 time_format = "%R"
 utc_time_offset = "local"
 
