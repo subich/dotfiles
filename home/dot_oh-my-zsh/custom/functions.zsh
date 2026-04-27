@@ -14,7 +14,7 @@ function _connect_to_redshift {
   PGPASSWORD=$password psql $connection_string $user
 }
 
-function connect_to_workgroup {
+function connect-to-workgroup {
   # Connect to a Redshift serverless workgroup.
   # Requires an active AWS session
   local workgroup_name=$1
@@ -24,7 +24,7 @@ function connect_to_workgroup {
   _connect_to_redshift $workgroup_name $(echo $creds | jq -r '.dbUser') $(echo $creds | jq -r '.dbPassword')
 }
 
-function connect_to_workgroup_admin {
+function connect-to-workgroup-admin {
   local workgroup_name=$1
   echo "Getting admin credentials for $workgroup_name..."
   local creds=$(aws secretsmanager get-secret-value --secret-id "redshift!${workgroup_name}-admin" | jq -r '.SecretString')
@@ -32,7 +32,7 @@ function connect_to_workgroup_admin {
   _connect_to_redshift $workgroup_name $(echo $creds | jq -r '.username') $(echo $creds | jq -r '.password')
 }
 
-function set_aws_profile {
+function set-aws-profile {
   if [ -z "$1" ]; then
     local profiles
     profiles=$(grep '^\[' ~/.aws/credentials 2>/dev/null | sed 's/^\[\(.*\)\]$/\1/')
