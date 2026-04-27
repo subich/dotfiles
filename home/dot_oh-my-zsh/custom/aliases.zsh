@@ -9,6 +9,8 @@ function alias_if() {
 alias_if ping='prettyping --nolegend'
 alias_if lg='lazygit'
 
+unset -f alias_if
+
 # Use bat as pager and cat replacement
 # https://github.com/sharkdp/bat
 if command -v bat >/dev/null 2>&1; then
