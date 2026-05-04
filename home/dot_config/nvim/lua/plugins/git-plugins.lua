@@ -59,11 +59,11 @@ return {
           -- Module-level toggle state (persists for the session).
           if not gitsigns_base_is_main then
             local branch = get_default_branch()
-            gitsigns.change_base(branch)
+            gitsigns.change_base(branch, true)
             vim.notify("gitsigns base → " .. branch, vim.log.levels.INFO)
             gitsigns_base_is_main = true
           else
-            gitsigns.change_base(nil)
+            gitsigns.change_base(nil, true)
             vim.notify("gitsigns base → index (reset)", vim.log.levels.INFO)
             gitsigns_base_is_main = false
           end
