@@ -37,3 +37,5 @@ keybind = global:alt+super+0=toggle_quick_terminal
 
 macos-titlebar-style = transparent
 macos-window-buttons = hidden
+
+progress-style = true
