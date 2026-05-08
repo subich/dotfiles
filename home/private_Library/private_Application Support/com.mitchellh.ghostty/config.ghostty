@@ -1,4 +1,10 @@
-font-family = "BerkeleyMono Nerd Font"
+quick-terminal-screen = mouse
+quick-terminal-size = 40%
+
+window-theme = system
+background-opacity = 0.2
+background-blur = macos-glass-regular
+# background-blur = true
 
 theme = Apple System Colors
 palette-harmonious = true
@@ -24,4 +30,10 @@ palette = 13=#bf5af2
 palette = 14=#76d6ff
 palette = 15=#ffffff
 
+font-family = "BerkeleyMono Nerd Font"
+font-size = 13
+
 keybind = global:alt+super+0=toggle_quick_terminal
+
+macos-titlebar-style = transparent
+macos-window-buttons = hidden
