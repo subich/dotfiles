@@ -1,0 +1,14 @@
+{{- $email := promptStringOnce . "email" "What is your email address" -}}
+{{- $gpg_signingkey := promptStringOnce . "gpg_signingkey" "What is your GPG signing key ID" -}}
+{{- $container_runtime_choices := list "docker" "podman" -}}
+{{- $container_runtime := promptChoiceOnce . "container_runtime" "What container runtime do you use" $container_runtime_choices -}}
+
+[data]
+  email = {{ $email | quote }}
+  gpg_signingkey = {{ $gpg_signingkey | quote }}
+  container_runtime = {{ $container_runtime | quote }}
+  additional_path_entries = []
+
+[merge]
+  command = "nvim"
+  args = ["-d", "{{ "{{ .Destination }}" }}", "{{ "{{ .Source }}" }}", "{{ "{{ .Target }}" }}"]
