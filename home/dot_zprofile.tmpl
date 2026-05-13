@@ -1,3 +1,8 @@
+{{- if eq .profile "work" -}}
+# Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.pre.zsh"
+{{- end }}
+
 eval "$(/opt/homebrew/bin/mise activate zsh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -10,4 +15,10 @@ export GPG_TTY="$(tty)"
 
 {{- range .additional_path_entries }}
 export PATH="$PATH:{{ . }}"
+{{- end }}
+
+{{- if eq .profile "work" }}
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.post.zsh"
 {{- end }}
