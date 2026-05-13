@@ -20,12 +20,13 @@ die() {
 # Download and install chezmoi into CHEZMOI_BIN_DIR.
 install_chezmoi() {
   if command -v curl > /dev/null 2>&1; then
-    sh -c "$(curl -fsSL "$CHEZMOI_INSTALL_URL")" -- -b "$CHEZMOI_BIN_DIR"
+    installer="$(curl -fsSL "$CHEZMOI_INSTALL_URL")" || die "Failed to download chezmoi installer."
   elif command -v wget > /dev/null 2>&1; then
-    sh -c "$(wget -qO- "$CHEZMOI_INSTALL_URL")" -- -b "$CHEZMOI_BIN_DIR"
+    installer="$(wget -qO- "$CHEZMOI_INSTALL_URL")" || die "Failed to download chezmoi installer."
   else
     die "curl or wget is required to install chezmoi."
   fi
+  sh -c "$installer" -- -b "$CHEZMOI_BIN_DIR"
 }
 
 # Return the chezmoi binary path, installing it first if necessary.
