@@ -9,6 +9,7 @@ cask_args appdir: "/Applications", require_sha: true
 brew "chezmoi"
 brew "bat"
 brew "docker"
+brew "dockutil"
 brew "eza"
 brew "fd"
 brew "fzf"
@@ -48,6 +49,5 @@ brew "docker-credential-helper"
 
 cask "copilot-cli"
 {{- else if eq .profile "work" }}
-
 cask "docker-desktop"
 {{- end }}
