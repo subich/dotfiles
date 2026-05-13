@@ -35,7 +35,6 @@ brew "zsh-syntax-highlighting"
 # Homebrew casks
 cask "1password"
 cask "1password-cli"
-cask "copilot-cli"
 cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 cask "raycast"
@@ -46,6 +45,9 @@ brew "docker-buildx"
 brew "docker-completion"
 brew "docker-compose"
 brew "docker-credential-helper"
+
+cask "copilot-cli"
 {{- else if eq .profile "work" }}
+
 cask "docker-desktop"
 {{- end }}
