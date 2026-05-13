@@ -16,7 +16,7 @@ adjust-underline-position = 6
 # Add extra vertical space between rows (line spacing); the font is centered in the taller cell
 adjust-cell-height = "20%"
 # Thickness of the bar cursor and outlined-rect cursor in pixels or %
-adjust-cursor-thickness = 5
+adjust-cursor-thickness = 1
 window-padding-x = 0
 window-padding-y = 0
 # Distribute any leftover fractional-pixel viewport space evenly across all four padding edges
