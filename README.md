@@ -6,21 +6,34 @@ Personal dotfiles managed with [chezmoi](https://github.com/twpayne/chezmoi).
 
 | Path | Description |
 | --- | --- |
-| `~/.zshrc`, `~/.zprofile`, `~/.oh-my-zsh/custom/` | Zsh config (oh-my-zsh, aliases, functions) |
-| `~/.gitconfig`, `~/.config/git/ignore` | Git config (templated) |
+| `~/.zshrc`, `~/.zprofile` | Zsh config (templated) |
+| `~/.oh-my-zsh/` | oh-my-zsh — managed as an external archive |
+| `~/.oh-my-zsh/custom/` | oh-my-zsh custom aliases and functions |
+| `~/.gitconfig` | Git config (templated) |
+| `~/.config/git/aliases`, `~/.config/git/ignore` | Git aliases and global ignore |
 | `~/.config/nvim/` | Neovim config |
 | `~/.config/lazygit/` | Lazygit config |
 | `~/.config/starship.toml` | Starship prompt |
 | `~/.config/delta/` | Delta diff themes |
+| `~/.config/ghostty/config` | Ghostty config |
 | `~/.tmux.conf` | Tmux config |
 | `~/.vimrc` | Vim config |
 | `~/.psqlrc` | psql config |
 | `~/.Brewfile` | Homebrew bundle (templated) |
-| `~/Library/Application Support/com.mitchellh.ghostty/config` | Ghostty config |
 
 ## Prerequisites
 
 - `curl` or `wget` (used by `install.sh` to bootstrap chezmoi if needed)
+
+## Configuration
+
+On first run, `chezmoi init` will prompt for:
+
+| Variable | Description |
+| --- | --- |
+| `profile` | Environment profile — `personal` or `work` (controls Brewfile contents and zprofile path entries) |
+| `email` | Used in `~/.gitconfig` |
+| `gpg_signingkey` | GPG key ID used for commit signing in `~/.gitconfig` |
 
 ## Install
 
@@ -42,3 +55,13 @@ cd dotfiles
 ```sh
 chezmoi update
 ```
+
+## macOS automation
+
+These scripts run automatically on `chezmoi apply` (macOS only, re-run only when their content changes):
+
+| Script | What it does |
+| --- | --- |
+| `run_onchange_install_packages` | Installs Homebrew if missing, then runs `brew bundle --global` |
+| `run_onchange_after_configure-defaults` | Applies macOS `defaults` for Finder, Dock, and text replacement |
+| `run_onchange_after_configure-dock` | Removes stock Apple apps from the Dock using `dockutil` |
