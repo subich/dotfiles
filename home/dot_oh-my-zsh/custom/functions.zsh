@@ -36,6 +36,7 @@ function set-aws-profile {
   if [ -z "$1" ]; then
     local profiles
     profiles=$(grep '^\[' ~/.aws/credentials 2>/dev/null | sed 's/^\[\(.*\)\]$/\1/')
+    profiles+=$(grep '^\[profile' ~/.aws/config 2>/dev/null | sed 's/^\[profile \(.*\)\]$/\1/')
     if [ -z "$profiles" ]; then
       echo "No profiles found in ~/.aws/credentials"
       return 1
