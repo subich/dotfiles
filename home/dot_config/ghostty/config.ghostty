@@ -1,41 +1,120 @@
-quick-terminal-screen = mouse
-quick-terminal-size = 40%
+# https://ghostty.org/docs/config/reference
 
-window-theme = system
-background-opacity = 0.2
-background-blur = macos-glass-regular
-# background-blur = true
-
-theme = Apple System Colors
-palette-harmonious = true
-background = #1e1e1e
-selection-background = #3f638b
-selection-foreground = #ffffff
-cursor-color = #98989d
-cursor-text = #ffffff
-palette = 0=#1a1a1a
-palette = 1=#cc372e
-palette = 2=#26a439
-palette = 3=#cdac08
-palette = 4=#0869cb
-palette = 5=#9647bf
-palette = 6=#479ec2
-palette = 7=#98989d
-palette = 8=#464646
-palette = 9=#ff453a
-palette = 10=#32d74b
-palette = 11=#ffd60a
-palette = 12=#0a84ff
-palette = 13=#bf5af2
-palette = 14=#76d6ff
-palette = 15=#ffffff
-
+# Font
 font-family = "BerkeleyMono Nerd Font"
+font-family-bold = "BerkeleyMono Nerd Font"
+font-family-italic = "BerkeleyMono Nerd Font"
+font-family-bold-italic = "BerkeleyMono Nerd Font"
+# Font used for window and tab title bars (not terminal content). Any system font is valid.
+window-title-font-family = "BerkeleyMono Nerd Font"
+# Font size in points
 font-size = 13
 
-keybind = global:alt+super+0=toggle_quick_terminal
+# Modify font characteristics
+# Shift underline position in pixels relative to the font default (positive = further down from top of cell)
+adjust-underline-position = 6
+# Add extra vertical space between rows (line spacing); the font is centered in the taller cell
+adjust-cell-height = "20%"
+# Thickness of the bar cursor and outlined-rect cursor in pixels or %
+adjust-cursor-thickness = 5
+window-padding-x = 0
+window-padding-y = 0
+# Distribute any leftover fractional-pixel viewport space evenly across all four padding edges
+window-padding-balance = true
 
+# Colors
+theme = Apple System Colors
+# Color of the window padding area. Values: background, extend (nearest cell bg), extend-always (extend without heuristics)
+window-padding-color = extend-always
+
+# Window appearance
+# Window chrome (titlebar) theme. Values: auto (based on bg color), system, light, dark, ghostty
+window-theme = system
+# macOS titlebar style. Values: native, transparent (native but window bg shows through), tabs (custom integrated tab bar), hidden
 macos-titlebar-style = transparent
+# Traffic-light (close/minimize/zoom) button visibility. Values: visible, hidden
 macos-window-buttons = hidden
-
+background-opacity = 1.0
+# Background blur. Values: false, true (intensity 20), integer intensity, macos-glass-regular, macos-glass-clear
+background-blur = macos-glass-regular
+# Allow terminal apps to show graphical progress indicators via ConEmu OSC 9;4 escape sequences
 progress-style = true
+
+# Integration
+mouse-hide-while-typing = true
+# Treat the Option key as Alt for terminal escape sequences. Values: true, false, left (left key only), right
+macos-option-as-alt = left
+
+# Quick terminal
+# Where the quick terminal slides in. Values: top, bottom, left, right, center
+quick-terminal-position = top
+# Which display the quick terminal appears on. Values: main (OS-recommended), mouse (cursor display), macos-menu-bar
+quick-terminal-screen = mouse
+# Size of the quick terminal. Primary axis (height for top/bottom/center, width for left/right) and optional secondary axis.
+# Format: <primary%|px> or <primary>,<secondary>. E.g. "70%,90%" = 70% tall, 90% wide.
+quick-terminal-size = 40%
+# global: prefix makes this keybind work system-wide, even when Ghostty is not the focused app
+keybind = global:super+shift+\=toggle_quick_terminal
+
+# Notifications
+# Send a notification when a long-running command finishes. Values: never, unfocused (only when terminal is not focused), always
+notify-on-command-finish = unfocused
+# How to notify. Options: bell, notify. Prefix with "no-" to disable (e.g. no-bell,notify).
+notify-on-command-finish-action = no-bell,notify
+# Minimum time a command must run before a notification is sent. Format: <number><unit> e.g. 10s, 1m30s
+notify-on-command-finish-after = 10s
+
+# Common keybindings
+# performable: only intercepts the key if the action can actually be performed (here: only if there is a selection)
+keybind = performable:super+c=copy_to_clipboard
+
+# Prompt navigation keybindings
+# jump_to_prompt requires shell integration; -1 = jump to previous prompt, 1 = jump to next prompt
+keybind = super+[=jump_to_prompt:-1
+keybind = super+]=jump_to_prompt:1
+
+# Split navigation keybindings
+# toggle_split_zoom: maximize the focused split to fill the window; press again to restore
+keybind = super+z=toggle_split_zoom
+keybind = super+h=goto_split:left
+keybind = super+j=goto_split:bottom
+keybind = super+k=goto_split:top
+keybind = super+l=goto_split:right
+
+# Split management keybindings
+# ⌘D alone is silenced so the key-sequence bindings below (⌘D > direction) can take effect
+keybind = super+d=ignore
+keybind = super+d>j=new_split:down
+keybind = super+d>k=new_split:up
+keybind = super+d>h=new_split:left
+keybind = super+d>l=new_split:right
+
+# Resize splits keybindings
+# "resize/" prefix: these bindings are only active while the "resize" key table is activated (see ⌘R below)
+keybind = resize/k=resize_split:up,30
+keybind = resize/j=resize_split:down,30
+keybind = resize/h=resize_split:left,30
+keybind = resize/l=resize_split:right,30
+keybind = resize/shift+k=resize_split:up,100
+keybind = resize/shift+j=resize_split:down,100
+keybind = resize/shift+h=resize_split:left,100
+keybind = resize/shift+l=resize_split:right,100
+keybind = resize/arrow_up=resize_split:up,10
+keybind = resize/arrow_down=resize_split:down,10
+keybind = resize/arrow_left=resize_split:left,10
+keybind = resize/arrow_right=resize_split:right,10
+# deactivate_key_table: exit the current modal key table and return to default bindings
+keybind = resize/escape=deactivate_key_table
+# catch_all: silently consume any key not otherwise bound in this key table (prevents keys leaking to the terminal)
+keybind = resize/catch_all=ignore
+# activate_key_table: enter the named modal key table so the "resize/" bindings above become active
+keybind = super+r=activate_key_table:resize
+
+# Disable default keybindings
+keybind = super+shift+d=ignore
+keybind = super+shift+arrow_up=ignore
+keybind = super+shift+arrow_down=ignore
+keybind = super+arrow_up=ignore
+keybind = super+arrow_down=ignore
+keybind = super+alt+shift+w=ignore
+keybind = super+alt+shift+j=ignore
