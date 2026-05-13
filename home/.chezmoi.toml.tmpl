@@ -1,5 +1,6 @@
-{{- $profile := "personal" -}}
+{{- $interactive := stdinIsATTY -}}
 
+{{- $profile := "personal" -}}
 {{- if hasKey . "profile" -}}
 {{-   $profile = .profile -}}
 {{- else if $interactive -}}
