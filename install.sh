@@ -1,33 +1,56 @@
 #!/bin/sh
-
-# Install chezmoi dotfiles - supports both local and remote invocation
-# Local usage: sh install.sh
+#
+# Bootstrap chezmoi dotfiles.
+#
+# Local usage:  sh install.sh
 # Remote usage: sh -c "$(curl -fsSL https://raw.githubusercontent.com/subich/dotfiles/main/install.sh)"
 
-set -e # -e: exit on error
+set -e
 
-if [ ! "$(command -v chezmoi)" ]; then
-  bin_dir="$HOME/.local/bin"
-  chezmoi="$bin_dir/chezmoi"
-  if [ "$(command -v curl)" ]; then
-    sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
-  elif [ "$(command -v wget)" ]; then
-    sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
+CHEZMOI_BIN_DIR="$HOME/.local/bin"
+CHEZMOI_GITHUB_USER="subich"
+CHEZMOI_INSTALL_URL="https://git.io/chezmoi"
+
+# Print an error message to stderr and exit.
+die() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+# Download and install chezmoi into CHEZMOI_BIN_DIR.
+install_chezmoi() {
+  if command -v curl > /dev/null 2>&1; then
+    sh -c "$(curl -fsSL "$CHEZMOI_INSTALL_URL")" -- -b "$CHEZMOI_BIN_DIR"
+  elif command -v wget > /dev/null 2>&1; then
+    sh -c "$(wget -qO- "$CHEZMOI_INSTALL_URL")" -- -b "$CHEZMOI_BIN_DIR"
   else
-    echo "To install chezmoi, you must have curl or wget installed." >&2
-    exit 1
+    die "curl or wget is required to install chezmoi."
   fi
-else
-  chezmoi=chezmoi
-fi
+}
 
-# Detect invocation method: local file vs remote pipe
-if [ -f "$0" ]; then
-  # Local invocation: derive source dir from script location
-  # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
-  script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
-  exec "$chezmoi" init --apply "--source=$script_dir"
-else
-  # Remote invocation: use repository reference
-  exec "$chezmoi" init --apply subich --keep-going
-fi
+# Return the chezmoi binary path, installing it first if necessary.
+find_or_install_chezmoi() {
+  if command -v chezmoi > /dev/null 2>&1; then
+    echo "chezmoi"
+  else
+    install_chezmoi
+    echo "$CHEZMOI_BIN_DIR/chezmoi"
+  fi
+}
+
+# Apply dotfiles, detecting whether we were invoked locally or via remote pipe.
+apply_dotfiles() {
+  chezmoi="$(find_or_install_chezmoi)"
+
+  if [ -f "$0" ]; then
+    # Local invocation: resolve the script's directory and use it as the source.
+    # POSIX-portable directory resolution: https://stackoverflow.com/a/29834779/12156188
+    script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
+    exec "$chezmoi" init --apply "--source=$script_dir"
+  else
+    # Remote invocation (piped via curl/wget): pull from the GitHub repository.
+    exec "$chezmoi" init --apply "$CHEZMOI_GITHUB_USER" --keep-going
+  fi
+}
+
+apply_dotfiles
