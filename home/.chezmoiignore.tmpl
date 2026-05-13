@@ -1,0 +1,14 @@
+# Ignore non-macOS files.
+{{ if ne .chezmoi.os "darwin" }}
+.chezmoiscripts/darwin/**
+.config/homebrew
+.Brewfile
+{{ end }}
+
+# Ignore non-Linux files.
+{{ if ne .chezmoi.os "linux" -}}
+{{- end }}
+
+# Ignore non-Windows files.
+{{ if ne .chezmoi.os "windows" -}}
+{{- end }}
