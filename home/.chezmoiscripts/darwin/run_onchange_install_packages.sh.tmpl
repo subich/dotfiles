@@ -3,16 +3,26 @@
 # .Brewfile hash: {{ include "dot_Brewfile.tmpl" | sha256sum }}
 system_type=$(uname -s)
 
+HOMEBREW_INSTALL_URL="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
+BREW_ARM="/opt/homebrew/bin/brew"
+BREW_INTEL="/usr/local/bin/brew"
+
 install_brew() {
   # install Homebrew if it's missing
   if ! command -v brew >/dev/null 2>&1; then
     echo "Installing Homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    /bin/bash -c "$(curl -fsSL "$HOMEBREW_INSTALL_URL")"
   fi
 }
 
 if [ "$system_type" = "Darwin" ]; then
   install_brew
+  # Ensure brew is on PATH (needed right after a fresh install)
+  if [ -x "$BREW_ARM" ]; then
+    eval "$("$BREW_ARM" shellenv)"
+  elif [ -x "$BREW_INTEL" ]; then
+    eval "$("$BREW_INTEL" shellenv)"
+  fi
   if [ -f "$HOME/.Brewfile" ]; then
     echo "Updating homebrew bundle"
     brew bundle --global
