@@ -5,10 +5,8 @@ return {
     lazy = false,
     priority = 1000,
     opts = {
-      transparent_background = true, -- disables setting the background color.
-      float = {
-        transparent = true, -- enable transparent floating windows
-      },
+      transparent_background = false,
+      float = { transparent = false },
       auto_integrations = true,
     },
   },
