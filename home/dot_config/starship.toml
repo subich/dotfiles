@@ -178,7 +178,7 @@ format = '[$symbol$version](color_orange bold) '
 
 [python]
 symbol = " "
-format = '[$symbol$version](bold color_yellow) '
+format = '[$symbol$version \($virtualenv\)](bold color_yellow) '
 
 [rust]
 symbol = "󱘗 "
