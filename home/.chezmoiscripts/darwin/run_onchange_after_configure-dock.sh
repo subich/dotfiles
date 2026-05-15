@@ -4,6 +4,7 @@ set -eufo pipefail
 
 # Stock Apple apps to remove from the Dock.
 declare -a remove_labels=(
+	Launchpad
 	Safari
 	Messages
 	Mail
