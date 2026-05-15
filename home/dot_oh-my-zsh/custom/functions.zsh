@@ -33,27 +33,26 @@ function connect-to-workgroup-admin {
 }
 
 function set-aws-profile {
-  if [ -z "$1" ]; then
+  local selected="$1"
+
+  if [ -z "$selected" ]; then
     local profiles
-    profiles=$(grep '^\[' ~/.aws/credentials 2>/dev/null | sed 's/^\[\(.*\)\]$/\1/')
-    profiles+=$(grep '^\[profile' ~/.aws/config 2>/dev/null | sed 's/^\[profile \(.*\)\]$/\1/')
+    profiles=$({
+      grep '^\[' ~/.aws/credentials 2>/dev/null | sed 's/^\[\(.*\)\]$/\1/';
+      grep '^\[profile' ~/.aws/config 2>/dev/null | sed 's/^\[profile \(.*\)\]$/\1/';
+    } | sort -u)
     if [ -z "$profiles" ]; then
-      echo "No profiles found in ~/.aws/credentials"
+      echo "No profiles found in ~/.aws/credentials or ~/.aws/config"
       return 1
     fi
-    local selected
     selected=$(echo "$profiles" | fzf --prompt="Select AWS profile (ESC to clear): " --height=~10)
-    if [ -z "$selected" ]; then
-      unset AWS_PROFILE
-      unset AWS_DEFAULT_REGION
-      echo "AWS profile cleared"
-    else
-      export AWS_PROFILE="$selected"
-      export AWS_DEFAULT_REGION=us-east-1
-      echo "AWS profile set to $AWS_PROFILE"
-    fi
+  fi
+
+  if [ -z "$selected" ]; then
+    unset AWS_PROFILE AWS_DEFAULT_REGION
+    echo "AWS profile cleared"
   else
-    export AWS_PROFILE=$1
+    export AWS_PROFILE="$selected"
     export AWS_DEFAULT_REGION=us-east-1
     echo "AWS profile set to $AWS_PROFILE"
   fi
