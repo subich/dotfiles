@@ -39,6 +39,8 @@ background-opacity = 1.0
 background-blur = macos-glass-regular
 # Allow terminal apps to show graphical progress indicators via ConEmu OSC 9;4 escape sequences
 progress-style = true
+# Resize in cell-sized increments instead of pixels.
+window-step-resize = true
 
 # Integration
 mouse-hide-while-typing = true
