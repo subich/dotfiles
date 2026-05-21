@@ -6,19 +6,11 @@ function alias_if() {
   command -v "$cmd" > /dev/null 2>&1 && alias "$@"
 }
 
-alias_if ping='prettyping --nolegend'
+alias_if cat='bat' && export BAT_THEME="Dracula"
 alias_if lg='lazygit'
+alias_if ping='prettyping --nolegend'
 
 unset -f alias_if
-
-# Use bat as pager and cat replacement
-# https://github.com/sharkdp/bat
-if command -v bat >/dev/null 2>&1; then
-  export PAGER="bat"
-  export BAT_THEME="Dracula"
-  alias cat="bat"
-  # alias cat='bat --paging never --decorations never --plain'
-fi
 
 # Setup eza, modern alternative to ls
 # https://github.com/eza-community/eza
