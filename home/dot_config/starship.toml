@@ -55,7 +55,7 @@ vimcmd_visual_symbol = '[ ](bold fg:color_yellow)'
 
 # Segment configurations
 [aws]
-symbol = '  '
+symbol = ' '
 
 [battery]
 format = "[ $percentage $symbol]($style)"
