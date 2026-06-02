@@ -1,73 +1,35 @@
 # https://ghostty.org/docs/config/reference
 
-# Font
 font-family = "BerkeleyMono Nerd Font"
-font-family-bold = "BerkeleyMono Nerd Font"
-font-family-italic = "BerkeleyMono Nerd Font"
-font-family-bold-italic = "BerkeleyMono Nerd Font"
-# Font used for window and tab title bars (not terminal content). Any system font is valid.
-window-title-font-family = "BerkeleyMono Nerd Font"
-# Font size in points
 font-size = 13
 
-# Modify font characteristics
-# Shift underline position in pixels relative to the font default (positive = further down from top of cell)
+theme = Apple System Colors
+
+window-theme = system
+macos-titlebar-style = transparent
+macos-window-buttons = hidden
+background-blur = macos-glass-regular
+background-opacity = 1.0
+background-opacity-cells = true
+window-step-resize = true
+
+adjust-cell-height = 20%
 adjust-underline-position = 6
-# Add extra vertical space between rows (line spacing); the font is centered in the taller cell
-adjust-cell-height = "20%"
-# Thickness of the bar cursor and outlined-rect cursor in pixels or %
 adjust-cursor-thickness = 1
 window-padding-x = 0
 window-padding-y = 0
-# Distribute any leftover fractional-pixel viewport space evenly across all four padding edges
 window-padding-balance = true
 
-# Colors
-theme = Apple System Colors
-# Color of the window padding area. Values: background, extend (nearest cell bg), extend-always (extend without heuristics)
-window-padding-color = extend-always
-
-# Window appearance
-# Window chrome (titlebar) theme. Values: auto (based on bg color), system, light, dark, ghostty
-window-theme = system
-# macOS titlebar style. Values: native, transparent (native but window bg shows through), tabs (custom integrated tab bar), hidden
-macos-titlebar-style = transparent
-# Traffic-light (close/minimize/zoom) button visibility. Values: visible, hidden
-macos-window-buttons = hidden
-background-opacity = 1.0
-# Background blur. Values: false, true (intensity 20), integer intensity, macos-glass-regular, macos-glass-clear
-background-blur = macos-glass-regular
-# Allow terminal apps to show graphical progress indicators via ConEmu OSC 9;4 escape sequences
-progress-style = true
-# Resize in cell-sized increments instead of pixels.
-window-step-resize = true
-
-# Integration
 mouse-hide-while-typing = true
-# Treat the Option key as Alt for terminal escape sequences. Values: true, false, left (left key only), right
-macos-option-as-alt = left
+notify-on-command-finish = unfocused
+notify-on-command-finish-action = no-bell,notify
 
 # Quick terminal
-# Where the quick terminal slides in. Values: top, bottom, left, right, center
-quick-terminal-position = top
-# Which display the quick terminal appears on. Values: main (OS-recommended), mouse (cursor display), macos-menu-bar
-quick-terminal-screen = mouse
-# Size of the quick terminal. Primary axis (height for top/bottom/center, width for left/right) and optional secondary axis.
-# Format: <primary%|px> or <primary>,<secondary>. E.g. "70%,90%" = 70% tall, 90% wide.
-quick-terminal-size = 40%
-# global: prefix makes this keybind work system-wide, even when Ghostty is not the focused app
+quick-terminal-position = center
+quick-terminal-size = 70%,40%
 keybind = global:super+shift+\=toggle_quick_terminal
 
-# Notifications
-# Send a notification when a long-running command finishes. Values: never, unfocused (only when terminal is not focused), always
-notify-on-command-finish = unfocused
-# How to notify. Options: bell, notify. Prefix with "no-" to disable (e.g. no-bell,notify).
-notify-on-command-finish-action = no-bell,notify
-# Minimum time a command must run before a notification is sent. Format: <number><unit> e.g. 10s, 1m30s
-notify-on-command-finish-after = 10s
-
 # Common keybindings
-# performable: only intercepts the key if the action can actually be performed (here: only if there is a selection)
 keybind = performable:super+c=copy_to_clipboard
 
 # Prompt navigation keybindings
