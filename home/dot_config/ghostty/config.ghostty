@@ -1,24 +1,26 @@
 # https://ghostty.org/docs/config/reference
 
-font-family = "BerkeleyMono Nerd Font"
-font-size = 13
-
 theme = Apple System Colors
 
-window-theme = system
-macos-titlebar-style = transparent
-macos-window-buttons = hidden
+font-family = "BerkeleyMono Nerd Font"
+font-size = 13
+font-thicken=true
+font-thicken-strength=1
+
 background-blur = macos-glass-regular
 background-opacity = 1.0
 background-opacity-cells = true
+macos-titlebar-style = transparent
+macos-window-buttons = hidden
 window-step-resize = true
+window-theme = system
 
-adjust-cell-height = 20%
-adjust-underline-position = 6
+adjust-cell-height = 1
 adjust-cursor-thickness = 1
+adjust-underline-position = 6
+window-padding-balance = true
 window-padding-x = 0
 window-padding-y = 0
-window-padding-balance = true
 
 mouse-hide-while-typing = true
 notify-on-command-finish = unfocused
