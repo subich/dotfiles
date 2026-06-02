@@ -146,7 +146,7 @@ format = '[$symbol$version](bold color_green) '
 
 [os]
 disabled = false
-format = '[$symbol ]($style)'
+format = '[ $symbol ]($style)'
 style = "fg:color_fg0"
 
 [os.symbols]
