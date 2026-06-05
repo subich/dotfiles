@@ -3,3 +3,14 @@
     url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
     # exact = true
     stripComponents = 1
+    refreshPeriod = "168h"
+
+[".config/tmux/plugins/tpm"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tpm"
+    refreshPeriod = "168h"
+
+[".config/tmux/themes/catppuccin"]
+    type = "git-repo"
+    url = "https://github.com/catppuccin/tmux"
+    refreshPeriod = "168h"
