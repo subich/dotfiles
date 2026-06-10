@@ -57,3 +57,47 @@ function set-aws-profile {
     echo "AWS profile set to $AWS_PROFILE"
   fi
 }
+
+function connect-rds {
+  local instance_name=$1
+
+  if [ -z "$instance_name" ]; then
+    instance_name=$(
+      aws rds describe-db-instances \
+        --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]' \
+        --output text \
+      | awk '{if ($2 != "available") print $1 " (" $2 ")"; else print $1}' \
+      | fzf --prompt="Select RDS instance: " --height=~10 \
+      | awk '{print $1}'
+    )
+    if [ -z "$instance_name" ]; then
+      echo "No instance selected"
+      return 1
+    fi
+  fi
+
+  local instance_info=$(aws rds describe-db-instances --db-instance-identifier "$instance_name" --query 'DBInstances[0]' --output json)
+  local engine=$(echo $instance_info | jq -r '.Engine')
+  local host=$(echo $instance_info | jq -r '.Endpoint.Address')
+  local port=$(echo $instance_info | jq -r '.Endpoint.Port')
+  local secret_arn=$(echo $instance_info | jq -r '.MasterUserSecret.SecretArn')
+
+  echo "Getting credentials from Secrets Manager..."
+  local secret=$(aws secretsmanager get-secret-value --secret-id "$secret_arn" | jq -r '.SecretString')
+  local user=$(echo $secret | jq -r '.username')
+  local password=$(echo $secret | jq -r '.password')
+
+  echo "Connecting to $instance_name ($engine) as $user..."
+  case $engine in
+    postgres)
+      PGPASSWORD=$password pgcli -h $host -p $port -U $user postgres
+      ;;
+    sqlserver-*)
+      sqlcmd -S $host,$port -U $user -P $password -d master
+      ;;
+    *)
+      echo "Unsupported engine: $engine"
+      return 1
+      ;;
+  esac
+}
