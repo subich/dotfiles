@@ -16,12 +16,12 @@ unset -f alias_if
 # https://github.com/eza-community/eza
 if command -v eza >/dev/null 2>&1; then
   alias \ls='command ls "$@"'
-  alias ls='eza --icons "$@"'
-  alias ll='eza -lh --icons "$@"'
-  alias la='eza -lha --icons "$@"'
-  alias l='eza -l --icons "$@"'
-  alias lsd='eza -lha --no-permissions --no-user --time-style=relative --icons "$@"'
-  alias lt='eza --tree --icons "$@"'
+  alias ls='eza --icons auto "$@"'
+  alias ll='eza -lh --icons auto "$@"'
+  alias la='eza -lha --icons auto "$@"'
+  alias l='eza -l --icons auto "$@"'
+  alias lsd='eza -lha --no-permissions --no-user --time-style=relative --icons auto "$@"'
+  alias lt='eza --tree --icons auto "$@"'
   alias lt1='lt --level=1'
   alias lt2='lt --level=2'
   alias lt3='lt --level=3'
