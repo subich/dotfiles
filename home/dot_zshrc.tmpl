@@ -8,6 +8,10 @@ export ZSH="${HOME}/.oh-my-zsh"
 
 CASE_SENSITIVE="false"
 COMPLETION_WAITING_DOTS="true"
+# oh-my-zsh is installed as a chezmoi archive external (not a git clone), so its
+# built-in updater can't run. Updates are managed by chezmoi: `chezmoi -R apply`
+# (or the weekly refreshPeriod in .chezmoiexternal.toml).
+DISABLE_AUTO_UPDATE="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 ENABLE_CORRECTION="true"
 HIST_STAMPS="yyyy-mm-dd"
