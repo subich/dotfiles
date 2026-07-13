@@ -37,3 +37,5 @@ alias awslocal="aws --endpoint-url 'http://localhost:4566'"
 
 alias kiro-resume="kiro-cli chat --resume"
 alias kiro-resume-picker="kiro-cli chat --resume-picker"
+
+alias resolve-conflicts="kiro-cli --v3 chat --agent git-conflict-resolver 'Resolve the current git conflicts'"
