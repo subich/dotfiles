@@ -1,0 +1,31 @@
+name: Verify chezmoi templates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+      - name: Verify templates (dry-run apply)
+        env:
+          # Provide default data so prompts are skipped
+          CHEZMOI_CONFIG: |
+            [data]
+              profile = "personal"
+              email = "test@example.com"
+              gpg_signingkey = ""
+              additional_path_entries = []
+        run: |
+          mkdir -p ~/.config/chezmoi
+          echo "$CHEZMOI_CONFIG" > ~/.config/chezmoi/chezmoi.toml
+          chezmoi init --source "$GITHUB_WORKSPACE" --dry-run --no-tty
+          chezmoi apply --source "$GITHUB_WORKSPACE" --dry-run --no-tty
