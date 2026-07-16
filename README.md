@@ -16,7 +16,7 @@ Personal dotfiles managed with [chezmoi](https://github.com/twpayne/chezmoi).
 | `~/.config/starship.toml` | Starship prompt |
 | `~/.config/delta/` | Delta diff themes |
 | `~/.config/ghostty/config` | Ghostty config |
-| `~/.tmux.conf` | Tmux config |
+| `~/.config/tmux/tmux.conf` | Tmux config |
 | `~/.vimrc` | Vim config |
 | `~/.psqlrc` | psql config |
 | `~/.Brewfile` | Homebrew bundle (templated) |
@@ -33,7 +33,7 @@ On first run, `chezmoi init` will prompt for:
 | --- | --- |
 | `profile` | Environment profile — `personal` or `work` (controls Brewfile contents and zprofile path entries) |
 | `email` | Used in `~/.gitconfig` |
-| `gpg_signingkey` | GPG key ID used for commit signing in `~/.gitconfig` |
+| `gpg_signingkey` | SSH signing key (public key or 1Password key reference) used for commit signing |
 
 ## Install
 
