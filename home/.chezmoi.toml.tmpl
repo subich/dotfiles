@@ -8,7 +8,7 @@
 {{- end -}}
 
 {{- $email := promptStringOnce . "email" "What is your email address" -}}
-{{- $gpg_signingkey := promptStringOnce . "gpg_signingkey" "What is your GPG signing key ID" -}}
+{{- $gpg_signingkey := promptStringOnce . "gpg_signingkey" "What is your SSH signing key (public key or 1Password key reference)" -}}
 
 [data]
   profile = {{ $profile | quote }}
