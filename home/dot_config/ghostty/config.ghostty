@@ -76,6 +76,9 @@ keybind = resize/catch_all=ignore
 # activate_key_table: enter the named modal key table so the "resize/" bindings above become active
 keybind = super+r=activate_key_table:resize
 
+# Send Option as Alt so tmux M- bindings work
+macos-option-as-alt = true
+
 # Disable default keybindings
 keybind = super+shift+d=ignore
 keybind = super+shift+arrow_up=ignore
