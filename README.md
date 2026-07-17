@@ -50,6 +50,33 @@ cd dotfiles
 ./install.sh
 ```
 
+## Git worktrees
+
+The `wt` Zsh function manages isolated worktrees under
+`~/.local/share/git-worktrees/<repo>/`:
+
+```sh
+wt DAT-123-short-description       # create/reopen and enter
+wt agent DAT-123-short-description # enter and launch the configured agent
+wt                                 # fuzzy-select an existing worktree
+wt remove                          # remove worktree, retain branch
+wt done                            # remove clean merged worktree and branch
+wt list                            # list all worktrees
+wt prune                           # remove stale worktree metadata
+```
+
+Set `GIT_WORKTREE_HOME` to override the storage root. The agent command defaults to
+`kiro-cli chat`; override it for another tool, including any arguments:
+
+```sh
+export GIT_WORKTREE_AGENT_COMMAND='claude'
+# or for one invocation:
+GIT_WORKTREE_AGENT_COMMAND='codex --full-auto' wt agent DAT-123-description
+```
+
+`wt remove` and `wt done` refuse dirty worktrees, and `wt done` also refuses
+branches not merged into the primary worktree.
+
 ## Updating
 
 ```sh
