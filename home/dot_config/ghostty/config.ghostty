@@ -29,7 +29,7 @@ notify-on-command-finish-action = no-bell,notify
 
 # Start the first Ghostty surface in the persistent main tmux session. Later
 # surfaces, including the quick terminal, use the normal login shell.
-initial-command = /opt/homebrew/bin/tmux new-session -A -s main
+initial-command = /bin/zsh -l -c "/opt/homebrew/bin/tmux new-session -A -s main"
 
 quick-terminal-position = top
 quick-terminal-size = 500px,80%
