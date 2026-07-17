@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for command_name in fzf tmux zoxide; do
+  if ! command -v "${command_name}" >/dev/null 2>&1; then
+    printf 'tmux sessionizer requires %s\n' "${command_name}" >&2
+    exit 1
+  fi
+done
+
+list_candidates() {
+  tmux list-sessions -F $'session\t[session] #{session_name}\t#{session_name}' 2>/dev/null || true
+
+  while IFS= read -r directory; do
+    [[ -d "${directory}" ]] || continue
+    printf 'project\t[project] %s — %s\t%s\n' \
+      "${directory##*/}" "${directory}" "${directory}"
+  done < <(zoxide query --list 2>/dev/null)
+}
+
+selection="$(
+  list_candidates | fzf \
+    --border=none \
+    --cycle \
+    --delimiter=$'\t' \
+    --height=100% \
+    --no-multi \
+    --prompt='workspace> ' \
+    --with-nth=2
+)" || exit 0
+
+[[ -n "${selection}" ]] || exit 0
+IFS=$'\t' read -r candidate_type _ target <<<"${selection}"
+
+switch_or_attach() {
+  local session_name="$1"
+
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -t "=${session_name}"
+  else
+    tmux attach-session -t "=${session_name}"
+  fi
+}
+
+if [[ "${candidate_type}" == "session" ]]; then
+  switch_or_attach "${target}"
+  exit 0
+fi
+
+session_name="${target##*/}"
+session_name="${session_name//./-}"
+session_name="${session_name//:/-}"
+
+if ! tmux has-session -t "=${session_name}" 2>/dev/null; then
+  tmux new-session -d -s "${session_name}" -c "${target}"
+fi
+
+switch_or_attach "${session_name}"
