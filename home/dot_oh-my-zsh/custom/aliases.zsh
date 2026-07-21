@@ -29,13 +29,8 @@ if command -v eza >/dev/null 2>&1; then
   alias lt5='lt --level=5'
 fi
 
-function run-this { docker compose run --remove-orphans "${PWD##*/}" "$@" }
-alias test-this="run-this pytest"
-alias watch-this="run-this pytest-watcher --now --clear . --"
-
 alias awslocal="aws --endpoint-url 'http://localhost:4566'"
 
-alias kiro-resume="kiro-cli chat --resume"
-alias kiro-resume-picker="kiro-cli chat --resume-picker"
-
-alias resolve-conflicts="kiro-cli --v3 chat --agent git-conflict-resolver 'Resolve the current git conflicts'"
+alias k="kiro-cli"
+alias kr="kiro-cli chat --resume-picker"
+alias resolve-conflicts="kiro-cli chat --agent git-conflict-resolver 'Resolve the current git conflicts'"
