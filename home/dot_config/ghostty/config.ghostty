@@ -34,19 +34,24 @@ initial-command = /bin/zsh -l -c "/opt/homebrew/bin/tmux new-session -A -s main"
 quick-terminal-position = top
 quick-terminal-size = 500px,80%
 
-# Ghostty keybindings are deliberately minimal; tmux owns all workspace actions.
-keybind = clear
+# Keep Ghostty defaults; only unbind keys that conflict with tmux.
 keybind = global:super+grave_accent=toggle_quick_terminal
-keybind = performable:super+c=copy_to_clipboard
-keybind = super+v=paste_from_clipboard
-keybind = super+equal=increase_font_size:1
-keybind = super+plus=increase_font_size:1
-keybind = super+minus=decrease_font_size:1
-keybind = super+0=reset_font_size
-keybind = super+enter=toggle_fullscreen
-keybind = super+w=close_surface
-keybind = super+q=quit
-keybind = super+comma=open_config
-keybind = super+shift+comma=reload_config
+
+# Disable Ghostty tab/split actions — tmux owns these.
+keybind = super+t=unbind
+keybind = super+d=unbind
+keybind = super+shift+d=unbind
+keybind = super+shift+enter=unbind
+keybind = super+shift+right_bracket=unbind
+keybind = super+shift+left_bracket=unbind
+keybind = super+one=unbind
+keybind = super+two=unbind
+keybind = super+three=unbind
+keybind = super+four=unbind
+keybind = super+five=unbind
+keybind = super+six=unbind
+keybind = super+seven=unbind
+keybind = super+eight=unbind
+keybind = super+nine=unbind
 
 macos-option-as-alt = true
