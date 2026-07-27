@@ -11,6 +11,7 @@ font-thicken-strength = 1
 background-blur = macos-glass-regular
 background-opacity = 1.0
 background-opacity-cells = true
+macos-titlebar-proxy-icon = hidden
 macos-titlebar-style = transparent
 macos-window-buttons = hidden
 window-step-resize = true
