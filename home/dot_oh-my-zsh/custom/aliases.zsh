@@ -10,6 +10,14 @@ alias_if cat='bat' && export BAT_THEME="Dracula"
 alias_if lg='lazygit'
 alias_if ping='prettyping --nolegend'
 
+alias_if awslocal="aws --endpoint-url 'http://localhost:4566'"
+
+alias_if c="copilot"
+
+alias_if k="kiro-cli"
+alias_if kr="kiro-cli chat --resume-picker"
+alias_if resolve-conflicts="kiro-cli chat --agent git-conflict-resolver 'Resolve the current git conflicts'"
+
 unset -f alias_if
 
 # Setup eza, modern alternative to ls
@@ -28,9 +36,3 @@ if command -v eza >/dev/null 2>&1; then
   alias lt4='lt --level=4'
   alias lt5='lt --level=5'
 fi
-
-alias awslocal="aws --endpoint-url 'http://localhost:4566'"
-
-alias k="kiro-cli"
-alias kr="kiro-cli chat --resume-picker"
-alias resolve-conflicts="kiro-cli chat --agent git-conflict-resolver 'Resolve the current git conflicts'"
