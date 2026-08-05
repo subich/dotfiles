@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+"""Print Kiro credit usage for tmux."""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+import time
+from collections.abc import Callable, Mapping
+from contextlib import closing
+from pathlib import Path
+from typing import Protocol, Self, TypedDict
+from urllib.request import Request, urlopen
+
+_API_URL = "https://codewhisperer.us-east-1.amazonaws.com/"
+_CACHE_PATH = Path.home() / "Library" / "Caches" / "kiro-cli" / "kiro-credits.json"
+_DATABASE_PATH = (
+    Path.home() / "Library" / "Application Support" / "kiro-cli" / "data.sqlite3"
+)
+_HTTP_TIMEOUT_SECONDS = 5.0
+
+
+def format_usage(response: Mapping[str, object]) -> str:
+    """Format the CREDIT usage record for tmux."""
+    breakdowns = response["usageBreakdownList"]
+    assert isinstance(breakdowns, list)
+    credit = next(
+        item
+        for item in breakdowns
+        if isinstance(item, dict) and item["resourceType"] == "CREDIT"
+    )
+    current_usage = float(credit["currentUsageWithPrecision"])
+    usage_limit = float(credit["usageLimitWithPrecision"])
+    percentage = round(current_usage / usage_limit * 100)
+    return f"{percentage}%"
+
+
+class _CachedCreditUsage(TypedDict):
+    resourceType: str
+    currentUsageWithPrecision: float
+    usageLimitWithPrecision: float
+
+
+class _CachedUsage(TypedDict):
+    usageBreakdownList: list[_CachedCreditUsage]
+
+
+def _cacheable_usage(response: Mapping[str, object]) -> _CachedUsage:
+    """Return only the CREDIT fields needed to format cached usage."""
+    breakdowns = response["usageBreakdownList"]
+    if not isinstance(breakdowns, list):
+        raise TypeError("Kiro usage breakdown is invalid")
+    for item in breakdowns:
+        if not isinstance(item, Mapping) or item.get("resourceType") != "CREDIT":
+            continue
+        current_usage = item.get("currentUsageWithPrecision")
+        usage_limit = item.get("usageLimitWithPrecision")
+        if (
+            isinstance(current_usage, bool)
+            or not isinstance(current_usage, int | float)
+            or isinstance(usage_limit, bool)
+            or not isinstance(usage_limit, int | float)
+        ):
+            raise TypeError("Kiro credit usage is invalid")
+        return {
+            "usageBreakdownList": [
+                {
+                    "resourceType": "CREDIT",
+                    "currentUsageWithPrecision": float(current_usage),
+                    "usageLimitWithPrecision": float(usage_limit),
+                }
+            ]
+        }
+    raise ValueError("Kiro credit usage is unavailable")
+
+
+def fetch_usage(
+    access_token: str,
+    profile_arn: str,
+    post: Callable[[str, Mapping[str, str], str, float], Mapping[str, object]],
+) -> Mapping[str, object]:
+    """Get usage limits from the Kiro service."""
+    return post(
+        _API_URL,
+        {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/x-amz-json-1.0",
+            "X-Amz-Target": "AmazonCodeWhispererService.GetUsageLimits",
+        },
+        json.dumps(
+            {
+                "profileArn": profile_arn,
+                "resourceType": "AGENTIC_REQUEST",
+                "isEmailRequired": True,
+            }
+        ),
+        _HTTP_TIMEOUT_SECONDS,
+    )
+
+
+def get_output(
+    *,
+    clock: Callable[[], float],
+    read_cache: Callable[[], tuple[float, Mapping[str, object]] | None],
+    write_cache: Callable[[float, Mapping[str, object]], None],
+    load_credentials: Callable[[], tuple[str, str]],
+    post: Callable[[str, Mapping[str, str], str, float], Mapping[str, object]],
+) -> str:
+    """Get the tmux status text from a cache entry or the Kiro service."""
+    now = clock()
+    cached_usage = read_cache()
+    stale_response: Mapping[str, object] | None = None
+    if cached_usage is not None:
+        cached_at, response = cached_usage
+        if now - cached_at < 300:
+            return format_usage(response)
+        stale_response = response
+    try:
+        access_token, profile_arn = load_credentials()
+        response = fetch_usage(access_token, profile_arn, post)
+        write_cache(now, _cacheable_usage(response))
+        return format_usage(response)
+    except (
+        OSError,
+        sqlite3.Error,
+        ValueError,
+        KeyError,
+        StopIteration,
+        TypeError,
+        ZeroDivisionError,
+    ):
+        if stale_response is not None:
+            return format_usage(stale_response)
+        return "Kiro unavailable"
+
+
+def _connect_database(database_path: Path) -> sqlite3.Connection:
+    return sqlite3.connect(f"{database_path.as_uri()}?mode=ro", uri=True, timeout=1.0)
+
+
+def load_credentials(
+    database_path: Path,
+    connect: Callable[[Path], sqlite3.Connection] = _connect_database,
+) -> tuple[str, str]:
+    """Load the Kiro access token and profile ARN from its local database."""
+    with closing(connect(database_path)) as connection:
+        token_row = connection.execute(
+            "SELECT value FROM auth_kv WHERE key = ?", ("kirocli:odic:token",)
+        ).fetchone()
+        profile_row = connection.execute(
+            "SELECT value FROM state WHERE key = ?",
+            ("api.codewhisperer.profile",),
+        ).fetchone()
+    if token_row is None or profile_row is None:
+        raise ValueError("Kiro credentials are unavailable")
+    token = json.loads(token_row[0])
+    if not isinstance(token, dict):
+        raise TypeError("Kiro access token is invalid")
+    access_token = token.get("access_token")
+    if not isinstance(access_token, str):
+        raise TypeError("Kiro access token is invalid")
+    profile = json.loads(profile_row[0])
+    if not isinstance(profile, dict):
+        raise TypeError("Kiro profile is invalid")
+    profile_arn = profile.get("arn")
+    if not isinstance(profile_arn, str):
+        raise TypeError("Kiro profile is invalid")
+    return access_token, profile_arn
+
+
+def read_cache(cache_path: Path) -> tuple[float, Mapping[str, object]] | None:
+    """Read a valid cached API response."""
+    try:
+        cache = json.loads(cache_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(cache, dict):
+        return None
+    timestamp = cache.get("timestamp")
+    response = cache.get("response")
+    if isinstance(timestamp, bool) or not isinstance(timestamp, int | float):
+        return None
+    if not isinstance(response, dict):
+        return None
+    try:
+        cached_usage = _cacheable_usage(response)
+    except (KeyError, TypeError, ValueError):
+        return None
+    return float(timestamp), cached_usage
+
+
+def write_cache(
+    cache_path: Path,
+    timestamp: float,
+    response: Mapping[str, object],
+) -> None:
+    """Write a successful API response to the cache."""
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps({"timestamp": timestamp, "response": response}),
+        encoding="utf-8",
+    )
+
+
+class _HttpResponse(Protocol):
+    def __enter__(self) -> Self: ...
+
+    def __exit__(
+        self,
+        exception_type: object,
+        exception: object,
+        traceback: object,
+    ) -> bool | None: ...
+
+    def read(self) -> bytes: ...
+
+
+class _UrlOpener(Protocol):
+    def __call__(self, request: Request, timeout: float) -> _HttpResponse: ...
+
+
+def post_json(
+    url: str,
+    headers: Mapping[str, str],
+    body: str,
+    timeout: float,
+    open_url: _UrlOpener = urlopen,
+) -> Mapping[str, object]:
+    """POST JSON and decode the JSON object response."""
+    request = Request(
+        url,
+        data=body.encode("utf-8"),
+        headers=dict(headers),
+        method="POST",
+    )
+    with open_url(request, timeout=timeout) as response:
+        decoded_response = json.loads(response.read().decode("utf-8"))
+    if not isinstance(decoded_response, dict):
+        raise TypeError("Kiro usage response is invalid")
+    return decoded_response
+
+
+def main(
+    *,
+    database_path: Path = _DATABASE_PATH,
+    cache_path: Path = _CACHE_PATH,
+    clock: Callable[[], float] = time.time,
+    post: Callable[
+        [str, Mapping[str, str], str, float], Mapping[str, object]
+    ] = post_json,
+    print_output: Callable[[str], object] = print,
+) -> int:
+    """Print the Kiro credit status and return a successful exit code."""
+    output = get_output(
+        clock=clock,
+        read_cache=lambda: read_cache(cache_path),
+        write_cache=lambda timestamp, response: write_cache(
+            cache_path,
+            timestamp,
+            response,
+        ),
+        load_credentials=lambda: load_credentials(database_path),
+        post=post,
+    )
+    print_output(output)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
