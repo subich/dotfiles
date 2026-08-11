@@ -150,7 +150,7 @@ set -agF @catppuccin_status_kiro \
 set -g status-right-length 120
 set -g status-left-length 80
 set -g status-left '#[align=absolute-centre]#{?#{==:#{client_key_table},resize},#[fg=#11111b#,bg=#f38ba8#,bold] RESIZE #[fg=#cdd6f4#,bg=#313244#,nobold] h/j/k/l:10  H/J/K/L:30  Esc:exit ,#{?#{==:#{client_key_table},split},#[fg=#11111b#,bg=#f9e2af#,bold] SPLIT #[fg=#cdd6f4#,bg=#313244#,nobold] h/j/k/l:create pane ,}}'
-set -g status-right "#{E:@catppuccin_status_session}"
+set -g status-right "   #{E:@catppuccin_status_session}"
 set -ag status-right "#{E:@catppuccin_status_application}"
 {{- if eq .profile "work" }}
 set -ag status-right "#{E:@catppuccin_status_kiro}"
