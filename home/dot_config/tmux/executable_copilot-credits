@@ -1,0 +1,167 @@
+#!/usr/bin/env python3
+"""Print GitHub Copilot credit usage for tmux."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import time
+from collections.abc import Callable, Mapping
+from pathlib import Path
+from typing import TypedDict
+
+_CACHE_PATH = (
+    Path.home() / "Library" / "Caches" / "copilot-cli" / "copilot-credits.json"
+)
+_CACHE_TTL_SECONDS = 300
+_COMMAND_TIMEOUT_SECONDS = 5.0
+
+
+class _CachedUsage(TypedDict):
+    percent_remaining: float
+
+
+def _percent_used(response: Mapping[str, object]) -> int:
+    """Return the used percentage from Copilot's premium interaction quota."""
+    snapshots = response["quota_snapshots"]
+    if not isinstance(snapshots, Mapping):
+        raise TypeError("Copilot quota snapshots are invalid")
+    premium_interactions = snapshots["premium_interactions"]
+    if not isinstance(premium_interactions, Mapping):
+        raise TypeError("Copilot premium interaction quota is invalid")
+    percent_remaining = premium_interactions["percent_remaining"]
+    if (
+        isinstance(percent_remaining, bool)
+        or not isinstance(percent_remaining, int | float)
+        or not 0 <= percent_remaining <= 100
+    ):
+        raise TypeError("Copilot remaining quota is invalid")
+    return round(100 - percent_remaining)
+
+
+def format_usage(response: Mapping[str, object]) -> str:
+    """Format Copilot credit usage for tmux."""
+    return f"{_percent_used(response)}%"
+
+
+def _cacheable_usage(response: Mapping[str, object]) -> _CachedUsage:
+    """Return only the quota value needed for the tmux status cache."""
+    snapshots = response["quota_snapshots"]
+    if not isinstance(snapshots, Mapping):
+        raise TypeError("Copilot quota snapshots are invalid")
+    premium_interactions = snapshots["premium_interactions"]
+    if not isinstance(premium_interactions, Mapping):
+        raise TypeError("Copilot premium interaction quota is invalid")
+    percent_remaining = premium_interactions["percent_remaining"]
+    if (
+        isinstance(percent_remaining, bool)
+        or not isinstance(percent_remaining, int | float)
+        or not 0 <= percent_remaining <= 100
+    ):
+        raise TypeError("Copilot remaining quota is invalid")
+    return {"percent_remaining": float(percent_remaining)}
+
+
+def fetch_usage(
+    run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> Mapping[str, object]:
+    """Get the current Copilot quota from the authenticated GitHub CLI account."""
+    result = run(
+        ["gh", "api", "/copilot_internal/user"],
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=_COMMAND_TIMEOUT_SECONDS,
+    )
+    response = json.loads(result.stdout)
+    if not isinstance(response, dict):
+        raise TypeError("Copilot quota response is invalid")
+    return response
+
+
+def read_cache(cache_path: Path) -> tuple[float, _CachedUsage] | None:
+    """Read a valid cached quota response."""
+    try:
+        cache = json.loads(cache_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(cache, dict):
+        return None
+    timestamp = cache.get("timestamp")
+    usage = cache.get("usage")
+    if isinstance(timestamp, bool) or not isinstance(timestamp, int | float):
+        return None
+    if not isinstance(usage, dict):
+        return None
+    try:
+        return float(timestamp), _cacheable_usage(
+            {"quota_snapshots": {"premium_interactions": usage}}
+        )
+    except (KeyError, TypeError):
+        return None
+
+
+def write_cache(cache_path: Path, timestamp: float, usage: _CachedUsage) -> None:
+    """Write the quota data needed by tmux without retaining account details."""
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps({"timestamp": timestamp, "usage": usage}),
+        encoding="utf-8",
+    )
+
+
+def get_output(
+    *,
+    clock: Callable[[], float],
+    read_cache: Callable[[], tuple[float, _CachedUsage] | None],
+    write_cache: Callable[[float, _CachedUsage], None],
+    fetch_usage: Callable[[], Mapping[str, object]],
+) -> str:
+    """Get tmux status text from cache or refresh it from GitHub."""
+    now = clock()
+    cached_usage = read_cache()
+    stale_usage: _CachedUsage | None = None
+    if cached_usage is not None:
+        cached_at, usage = cached_usage
+        if now - cached_at < _CACHE_TTL_SECONDS:
+            return format_usage({"quota_snapshots": {"premium_interactions": usage}})
+        stale_usage = usage
+    try:
+        usage = _cacheable_usage(fetch_usage())
+        write_cache(now, usage)
+        return format_usage({"quota_snapshots": {"premium_interactions": usage}})
+    except (
+        OSError,
+        subprocess.SubprocessError,
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+        ValueError,
+    ):
+        if stale_usage is not None:
+            return format_usage(
+                {"quota_snapshots": {"premium_interactions": stale_usage}}
+            )
+        return "Copilot unavailable"
+
+
+def main(
+    *,
+    cache_path: Path = _CACHE_PATH,
+    clock: Callable[[], float] = time.time,
+    fetch_usage: Callable[[], Mapping[str, object]] = fetch_usage,
+    print_output: Callable[[str], object] = print,
+) -> int:
+    """Print the Copilot credit status and return a successful exit code."""
+    output = get_output(
+        clock=clock,
+        read_cache=lambda: read_cache(cache_path),
+        write_cache=lambda timestamp, usage: write_cache(cache_path, timestamp, usage),
+        fetch_usage=fetch_usage,
+    )
+    print_output(output)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

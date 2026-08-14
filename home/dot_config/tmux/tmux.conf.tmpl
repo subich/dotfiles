@@ -131,7 +131,6 @@ set -g @catppuccin_window_current_text " #W#{?window_zoomed_flag, 󰍉,}"
 run "~/.config/tmux/themes/catppuccin/catppuccin.tmux"
 
 {{- if eq .profile "work" }}
-# Match the Kiro credit widget to the other Catppuccin status modules.
 # Use Kiro's brand purple (#7B61FF) as the accent color.
 set -g @kiro_purple "#7B61FF"
 set -gF @catppuccin_status_kiro \
@@ -145,6 +144,20 @@ set -agF @catppuccin_status_kiro \
   "#[fg=#{E:@catppuccin_status_module_text_bg}]#{E:@catppuccin_status_right_separator}"
 {{- end }}
 
+{{- if eq .profile "personal" }}
+# Use GitHub Copilot's brand purple (#8534F3) as the accent color.
+set -g @copilot_purple "#8534F3"
+set -gF @catppuccin_status_copilot \
+  "#[fg=#{E:@copilot_purple}]#{E:@catppuccin_status_left_separator}"
+set -agF @catppuccin_status_copilot \
+  "#[fg=#{E:@thm_crust},bg=#{E:@copilot_purple}] "
+set -agF @catppuccin_status_copilot \
+  "#[fg=#{E:@thm_fg},bg=#{E:@catppuccin_status_module_text_bg}]"
+set -ag @catppuccin_status_copilot " #(~/.config/tmux/copilot-credits)"
+set -agF @catppuccin_status_copilot \
+  "#[fg=#{E:@catppuccin_status_module_text_bg}]#{E:@catppuccin_status_right_separator}"
+{{- end }}
+
 # Keep the status line focused on workspace context rather than system metrics.
 # Show contextual controls while a custom key table is active.
 set -g status-right-length 120
@@ -154,6 +167,9 @@ set -g status-right "   #{E:@catppuccin_status_session}"
 set -ag status-right "#{E:@catppuccin_status_application}"
 {{- if eq .profile "work" }}
 set -ag status-right "#{E:@catppuccin_status_kiro}"
+{{- end }}
+{{- if eq .profile "personal" }}
+set -ag status-right "#{E:@catppuccin_status_copilot}"
 {{- end }}
 set -agF status-right "#{E:@catppuccin_status_cpu}"
 set -agF status-right "#{E:@catppuccin_status_battery}"
