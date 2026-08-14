@@ -6,7 +6,7 @@
 vim.g.autoformat = false
 
 -- LSP to use for Python
-vim.g.lazyvim_python_lsp = "ty"
+vim.g.lazyvim_python_lsp = "pyrefly"
 
 -- Neovide specific options
 local change_scale_factor = function(delta)
