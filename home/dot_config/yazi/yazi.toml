@@ -1,0 +1,18 @@
+#:schema https://yazi-rs.github.io/schemas/yazi.json
+
+[mgr]
+sort_by = "natural"
+linemode = "size"
+
+[preview]
+wrap = "yes"
+max_width = 1920
+max_height = 1080
+image_filter = "lanczos3"
+
+[open]
+prepend_rules = [
+  { url = "*.drawio", use = "open" },
+  { url = "*.tmpl", use = "edit" },
+  { url = "Dockerfile*", use = "edit" },
+]
