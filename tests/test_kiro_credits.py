@@ -4,11 +4,15 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
+
 SCRIPT_PATH = (
     Path(__file__).parent.parent
     / "home"
     / "dot_config"
     / "tmux"
+    / "packages"
+    / "kiro"
     / "executable_kiro-credits"
 )
 
@@ -27,13 +31,50 @@ def test_formats_credit_usage_for_tmux():
         "usageBreakdownList": [
             {
                 "resourceType": "CREDIT",
-                "currentUsageWithPrecision": 1193.36,
+                "currentUsageWithPrecision": 8000.0,
                 "usageLimitWithPrecision": 10000.0,
             }
         ]
     }
 
-    assert module.format_usage(response) == "12%"
+    assert module.format_usage(response) == "80%"
+
+
+@pytest.mark.parametrize(
+    ("output", "expected"),
+    [
+        ("79%", "low"),
+        ("80%", "medium"),
+        ("99%", "medium"),
+        ("100%", "high"),
+        ("120%", "high"),
+        ("Kiro unavailable", "low"),
+    ],
+)
+def test_selects_status_at_usage_boundaries(output, expected):
+    module = load_module()
+
+    assert module._status_for_output(output, lambda _option: None) == expected
+
+
+def test_formats_package_colors_from_option_values():
+    module = load_module()
+    options = {
+        "@kiro_medium_thresh": "70",
+        "@kiro_high_thresh": "90",
+        "@kiro_low_fg_color": "low-fg",
+        "@kiro_medium_fg_color": "medium-fg",
+        "@kiro_high_fg_color": "high-fg",
+        "@kiro_low_bg_color": "low-bg",
+        "@kiro_medium_bg_color": "medium-bg",
+        "@kiro_high_bg_color": "high-bg",
+    }
+
+    assert module._format_output("80%", "fg-color", options.get) == "medium-fg"
+    assert module._format_output("100%", "bg-color", options.get) == "high-bg"
+    assert (
+        module._format_output("Kiro unavailable", "fg-color", options.get) == "low-fg"
+    )
 
 
 def test_fetch_usage_posts_profile_and_resource_type():

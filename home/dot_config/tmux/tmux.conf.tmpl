@@ -101,12 +101,6 @@ bind o run-shell "open '#{pane_current_path}'"
 bind t display-popup -d "#{pane_current_path}" -w 90% -h 90% -E "${SHELL} -l"
 bind T clock-mode
 
-{{- if eq .profile "work" }}
-# Run Kiro in a labeled pane beside the current project shell.
-bind K split-window -h -l 70% -c "#{pane_current_path}" 'kiro-cli chat; exec "$SHELL" -l' \; select-pane -T "kiro"
-bind C-k split-window -h -l 70% -c "#{pane_current_path}" 'kiro-cli chat --resume-picker; exec "$SHELL" -l' \; select-pane -T "kiro-resume"
-{{- end }}
-
 # Reload this configuration.
 bind R source-file "~/.config/tmux/tmux.conf" \; display-message "tmux.conf reloaded"
 
@@ -133,34 +127,6 @@ set -g @catppuccin_window_text " #W"
 set -g @catppuccin_window_current_text " #W#{?window_zoomed_flag, 󰍉,}"
 run "~/.config/tmux/themes/catppuccin/catppuccin.tmux"
 
-{{- if eq .profile "work" }}
-# Use Kiro's brand purple (#7B61FF) as the accent color.
-set -g @kiro_purple "#7B61FF"
-set -gF @catppuccin_status_kiro \
-  "#[fg=#{E:@kiro_purple}]#{E:@catppuccin_status_left_separator}"
-set -agF @catppuccin_status_kiro \
-  "#[fg=#{E:@thm_crust},bg=#{E:@kiro_purple}]󰚩 "
-set -agF @catppuccin_status_kiro \
-  "#[fg=#{E:@thm_fg},bg=#{E:@catppuccin_status_module_text_bg}]"
-set -ag @catppuccin_status_kiro " #(~/.config/tmux/kiro-credits)"
-set -agF @catppuccin_status_kiro \
-  "#[fg=#{E:@catppuccin_status_module_text_bg}]#{E:@catppuccin_status_right_separator}"
-{{- end }}
-
-{{- if eq .profile "personal" }}
-# Use GitHub Copilot's brand purple (#8534F3) as the accent color.
-set -g @copilot_purple "#8534F3"
-set -gF @catppuccin_status_copilot \
-  "#[fg=#{E:@copilot_purple}]#{E:@catppuccin_status_left_separator}"
-set -agF @catppuccin_status_copilot \
-  "#[fg=#{E:@thm_crust},bg=#{E:@copilot_purple}] "
-set -agF @catppuccin_status_copilot \
-  "#[fg=#{E:@thm_fg},bg=#{E:@catppuccin_status_module_text_bg}]"
-set -ag @catppuccin_status_copilot " #(~/.config/tmux/copilot-credits)"
-set -agF @catppuccin_status_copilot \
-  "#[fg=#{E:@catppuccin_status_module_text_bg}]#{E:@catppuccin_status_right_separator}"
-{{- end }}
-
 # Keep the status line focused on workspace context rather than system metrics.
 # Show contextual controls while a custom key table is active.
 set -g status-right-length 120
@@ -169,10 +135,10 @@ set -g status-left '#[align=absolute-centre]#{?#{==:#{client_key_table},resize},
 set -g status-right "   #{E:@catppuccin_status_session}"
 set -ag status-right "#{E:@catppuccin_status_application}"
 {{- if eq .profile "work" }}
-set -ag status-right "#{E:@catppuccin_status_kiro}"
+source-file "~/.config/tmux/packages/kiro/kiro.conf"
 {{- end }}
 {{- if eq .profile "personal" }}
-set -ag status-right "#{E:@catppuccin_status_copilot}"
+source-file "~/.config/tmux/packages/copilot/copilot.conf"
 {{- end }}
 set -agF status-right "#{E:@catppuccin_status_cpu}"
 set -agF status-right "#{E:@catppuccin_status_battery}"

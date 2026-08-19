@@ -3,13 +3,15 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import sqlite3
+import subprocess
 import time
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from contextlib import closing
 from pathlib import Path
-from typing import Protocol, Self, TypedDict
+from typing import Literal, Protocol, Self, TypedDict
 from urllib.request import Request, urlopen
 
 _API_URL = "https://codewhisperer.us-east-1.amazonaws.com/"
@@ -18,6 +20,77 @@ _DATABASE_PATH = (
     Path.home() / "Library" / "Application Support" / "kiro-cli" / "data.sqlite3"
 )
 _HTTP_TIMEOUT_SECONDS = 5.0
+_MEDIUM_THRESHOLD = 80
+_HIGH_THRESHOLD = 100
+
+
+def _read_threshold(
+    option_name: str,
+    default: int,
+    get_option: Callable[[str], str | None],
+) -> int:
+    """Return a configured threshold or its default value."""
+    value = get_option(option_name)
+    try:
+        return int(value) if value is not None else default
+    except ValueError:
+        return default
+
+
+def _status_for_output(
+    output: str,
+    get_option: Callable[[str], str | None],
+) -> Literal["low", "medium", "high"]:
+    """Return the configured status for a percentage output string."""
+    try:
+        percentage = int(output.removesuffix("%"))
+    except ValueError:
+        return "low"
+    if not output.endswith("%"):
+        return "low"
+    medium_threshold = _read_threshold(
+        "@kiro_medium_thresh",
+        _MEDIUM_THRESHOLD,
+        get_option,
+    )
+    high_threshold = _read_threshold(
+        "@kiro_high_thresh",
+        _HIGH_THRESHOLD,
+        get_option,
+    )
+    if percentage >= high_threshold:
+        return "high"
+    if percentage >= medium_threshold:
+        return "medium"
+    return "low"
+
+
+def _get_tmux_option(option_name: str) -> str | None:
+    """Read one tmux option without exposing subprocess calls to format logic."""
+    try:
+        result = subprocess.run(
+            ["tmux", "show-option", "-gv", option_name],
+            capture_output=True,
+            check=True,
+            text=True,
+            timeout=1.0,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return result.stdout.strip() or None
+
+
+def _format_output(
+    output: str,
+    output_mode: str,
+    get_option: Callable[[str], str | None],
+) -> str:
+    """Return a percentage or the configured color for its usage status."""
+    if output_mode == "percentage":
+        return output
+    color_type = "fg" if output_mode == "fg-color" else "bg"
+    status = _status_for_output(output, get_option)
+    return get_option(f"@kiro_{status}_{color_type}_color") or ""
 
 
 def format_usage(response: Mapping[str, object]) -> str:
@@ -240,6 +313,19 @@ def post_json(
     return decoded_response
 
 
+def _parse_output_mode(argv: Sequence[str] | None = None) -> str:
+    """Parse the optional tmux output mode."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "output_mode",
+        choices=("percentage", "fg-color", "bg-color"),
+        default="percentage",
+        nargs="?",
+        help="Print usage percentage, foreground color, or background color.",
+    )
+    return parser.parse_args(argv).output_mode
+
+
 def main(
     *,
     database_path: Path = _DATABASE_PATH,
@@ -248,9 +334,11 @@ def main(
     post: Callable[
         [str, Mapping[str, str], str, float], Mapping[str, object]
     ] = post_json,
+    output_mode: str = "percentage",
+    get_option: Callable[[str], str | None] = _get_tmux_option,
     print_output: Callable[[str], object] = print,
 ) -> int:
-    """Print the Kiro credit status and return a successful exit code."""
+    """Print Kiro usage or a configured tmux status color."""
     output = get_output(
         clock=clock,
         read_cache=lambda: read_cache(cache_path),
@@ -262,9 +350,9 @@ def main(
         load_credentials=lambda: load_credentials(database_path),
         post=post,
     )
-    print_output(output)
+    print_output(_format_output(output, output_mode, get_option))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(output_mode=_parse_output_mode()))

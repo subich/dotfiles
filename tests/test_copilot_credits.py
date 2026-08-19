@@ -4,11 +4,15 @@ import json
 import subprocess
 from pathlib import Path
 
+import pytest
+
 SCRIPT_PATH = (
     Path(__file__).parent.parent
     / "home"
     / "dot_config"
     / "tmux"
+    / "packages"
+    / "copilot"
     / "executable_copilot-credits"
 )
 
@@ -32,7 +36,45 @@ def quota_response(percent_remaining=75.9):
 def test_formats_credit_usage_for_tmux():
     module = load_module()
 
-    assert module.format_usage(quota_response()) == "24%"
+    assert module.format_usage(quota_response(20)) == "80%"
+
+
+@pytest.mark.parametrize(
+    ("output", "expected"),
+    [
+        ("79%", "low"),
+        ("80%", "medium"),
+        ("99%", "medium"),
+        ("100%", "high"),
+        ("120%", "high"),
+        ("Copilot unavailable", "low"),
+    ],
+)
+def test_selects_status_at_usage_boundaries(output, expected):
+    module = load_module()
+
+    assert module._status_for_output(output, lambda _option: None) == expected
+
+
+def test_formats_package_colors_from_option_values():
+    module = load_module()
+    options = {
+        "@copilot_medium_thresh": "70",
+        "@copilot_high_thresh": "90",
+        "@copilot_low_fg_color": "low-fg",
+        "@copilot_medium_fg_color": "medium-fg",
+        "@copilot_high_fg_color": "high-fg",
+        "@copilot_low_bg_color": "low-bg",
+        "@copilot_medium_bg_color": "medium-bg",
+        "@copilot_high_bg_color": "high-bg",
+    }
+
+    assert module._format_output("80%", "fg-color", options.get) == "medium-fg"
+    assert module._format_output("100%", "bg-color", options.get) == "high-bg"
+    assert (
+        module._format_output("Copilot unavailable", "fg-color", options.get)
+        == "low-fg"
+    )
 
 
 def test_fetch_usage_uses_authenticated_gh_account():
