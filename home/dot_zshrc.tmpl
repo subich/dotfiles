@@ -60,6 +60,10 @@ export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
 source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+if [[ -n "${TTY:-}" ]]; then
+    export GPG_TTY="$TTY"
+fi
 {{ if eq .profile "work" -}}
 
 # Kiro CLI post block. Keep at the bottom of this file.
