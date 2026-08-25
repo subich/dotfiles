@@ -14,7 +14,14 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
 
-[[ -r "${HOME}/.access_tokens" ]] && builtin source "${HOME}/.access_tokens"
+# Source tokens only from a private file.
+access_tokens_perms="$(stat -f '%Lp' "${HOME}/.access_tokens" 2>/dev/null)"
+if [[ "${access_tokens_perms}" == "600" ]]; then
+  builtin source "${HOME}/.access_tokens"
+elif [[ -n "${access_tokens_perms}" ]]; then
+  print -P -u2 "%F{red}%B WARNING:%b ~/.access_tokens perms ${access_tokens_perms} != 600, skipping. Run: chmod 600 ~/.access_tokens%f"
+fi
+unset access_tokens_perms
 
 {{- if eq .profile "work" }}
 export LLMWIKI_HOME="${HOME}/Documents/clearsense-kb"
