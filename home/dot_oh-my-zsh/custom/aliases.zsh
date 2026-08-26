@@ -16,7 +16,6 @@ alias_if c="copilot"
 
 alias_if k="kiro-cli"
 alias_if kr="kiro-cli chat --resume-picker"
-alias_if resolve-conflicts="kiro-cli chat --agent git-conflict-resolver 'Resolve the current git conflicts'"
 
 unset -f alias_if
 
