@@ -42,7 +42,7 @@ if [[ -n "${TMUX:-}" && -n "${TMUX_PANE:-}" ]]; then
     }
 
     _tmux_pane_title_precmd() {
-        tmux select-pane -t "${TMUX_PANE}" -T "${SHELL##*/}" 2>/dev/null
+        tmux select-pane -t "${TMUX_PANE}" -T "${SHELL##*/}: ${PWD}" 2>/dev/null
     }
 
     add-zsh-hook preexec _tmux_pane_title_preexec

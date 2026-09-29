@@ -19,9 +19,13 @@ set -g mode-keys vi
 set -g status-keys vi
 set -g renumber-windows on
 setw -g automatic-rename on
-setw -g automatic-rename-format "#{b:pane_current_path}"
+# Collapse a path in the pane title to its last segment, keeping the leading
+# prefix word (e.g. "zsh /a/b/c" -> "zsh …/c"). Single quotes are required:
+# in a double-quoted value, source-file reads \1 as an octal escape and errors
+# on the following multibyte "…".
+setw -g automatic-rename-format '#{s|^([^ ]* ).*/|\1…/|:pane_title}'
 set -g set-titles on
-set -g set-titles-string "#S — #W · #{pane_title}"
+set -g set-titles-string "#S — #{pane_title}"
 set -g status-interval 5
 set -g status-position top
 
@@ -31,10 +35,6 @@ setw -g monitor-activity on
 setw -g monitor-bell on
 set -g activity-action none
 set -g bell-action none
-
-# Identify shell, Kiro, test, and log panes within project windows.
-set -g pane-border-status top
-set -g pane-border-format " #{pane_index}: #{pane_title} "
 
 # Toggle pane zoom without prefix.
 bind -n M-z resize-pane -Z
