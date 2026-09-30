@@ -19,11 +19,13 @@ set -g mode-keys vi
 set -g status-keys vi
 set -g renumber-windows on
 setw -g automatic-rename on
-# Collapse a path in the pane title to its last segment, keeping the leading
-# prefix word (e.g. "zsh /a/b/c" -> "zsh …/c"). Single quotes are required:
-# in a double-quoted value, source-file reads \1 as an octal escape and errors
-# on the following multibyte "…".
-setw -g automatic-rename-format '#{s|^([^ ]* ).*/|\1…/|:pane_title}'
+# Collapse a path in the pane title to its last segment while keeping any
+# leading text (Kiro's working indicator "◐" and the command name, e.g.
+# "◐ kiro: ~/a/b/c" -> "◐ kiro: …/c"; "zsh /a/b/c" -> "zsh …/d"). Anchor on the
+# last space so the whole prefix is retained; only the final space-delimited
+# token is treated as the path. Single quotes are required: in a double-quoted
+# value, source-file reads \1 as an octal escape and errors on the multibyte "…".
+setw -g automatic-rename-format '#{s|^(.* )[^ ]*/([^/ ]*)$|\1…/\2|:pane_title}'
 set -g set-titles on
 set -g set-titles-string "#S — #{pane_title}"
 set -g status-interval 5
